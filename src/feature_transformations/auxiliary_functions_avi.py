@@ -1,0 +1,97 @@
+from itertools import compress
+import cupy as cp
+from src.auxiliary_functions.auxiliary_functions import fd
+from src.auxiliary_functions.indices import find_first_non_zero_entries, find_last_non_zero_entries
+from src.auxiliary_functions.sorting import get_unique_columns
+
+
+def construct_border(terms: cp.ndarray, terms_evaluated: cp.ndarray, X_train: cp.ndarray,
+                     degree_1_terms: cp.ndarray = None, degree_1_terms_evaluated: cp.ndarray = None,
+                     purging_terms: cp.ndarray = None):
+    """
+    Constructs the border of terms.
+
+    Args:
+        terms: cp.ndarray
+        terms_evaluated: cp.ndarray
+        X_train: cp.ndarray
+        degree_1_terms: cp.ndarray
+        degree_1_terms_evaluated: cp.ndarray
+        purging_terms: cp.ndarray, Optional
+            Purge all terms divisible by these terms. (Default is None.)
+
+    Returns:
+        border_terms_raw: cp.ndarray
+        border_evaluations_raw: cp.ndarray
+        non_purging_indices: list
+    """
+    terms = fd(terms)
+    terms_evaluated = fd(terms_evaluated)
+    X_train = fd(X_train)
+
+    if degree_1_terms is None:
+        border_terms_raw, border_evaluations_raw = cp.identity(X_train.shape[1]), X_train
+    else:
+        terms = fd(terms)
+        terms_evaluated = fd(terms_evaluated)
+
+        degree_1_terms = fd(degree_1_terms)
+        degree_1_terms_evaluated = fd(degree_1_terms_evaluated)
+
+        terms_repeat = cp.repeat(terms, repeats=degree_1_terms.shape[1], axis=1)
+        degree_1_terms_tile = cp.tile(degree_1_terms, (1, terms.shape[1]))
+        border_terms_raw = fd(degree_1_terms_tile + terms_repeat)
+
+        terms_evaluated_repeat = cp.repeat(terms_evaluated, repeats=degree_1_terms_evaluated.shape[1], axis=1)
+        degree_1_terms_evaluated_tile = cp.tile(degree_1_terms_evaluated, (1, terms_evaluated.shape[1]))
+        border_evaluations_raw = cp.multiply(degree_1_terms_evaluated_tile, terms_evaluated_repeat)
+
+    border_terms_purged, border_evaluations_purged, unique_indices = get_unique_columns(
+        border_terms_raw, border_evaluations_raw)
+
+    if purging_terms is not None:
+        border_terms_purged, border_evaluations_purged, unique_indices_2 = purge(
+            border_terms_purged, border_evaluations_purged, purging_terms)
+        if unique_indices_2 is not None:
+            non_purging_indices = [unique_indices[i] for i in unique_indices_2]
+        else:
+            non_purging_indices = unique_indices
+    else:
+        non_purging_indices = unique_indices
+
+    return border_terms_raw, border_evaluations_raw, non_purging_indices
+
+
+def purge(terms: cp.ndarray, terms_evaluated: cp.ndarray, purging_terms: cp.ndarray):
+    """Purges the purging_terms from terms and updates terms_evaluated accordingly.
+
+    If any term in terms is a power of a term in purging_terms, it gets deleted. The corresponding column in
+    terms_evaluated gets deleted aswell.
+    """
+    indices = [x for x in range(0, terms.shape[1])]
+    for i in range(0, purging_terms.shape[1]):
+        illegal = fd(purging_terms[:, i])
+        list_keep = cp.any(terms[:, indices] - illegal < 0, axis=0).tolist()
+        indices = list(compress(indices, list_keep))
+
+    return terms[:, indices], terms_evaluated[:, indices], indices
+
+
+def update_coefficient_vectors(G_coefficient_vectors: cp.ndarray, coefficient_vector: cp.ndarray, first: bool = False):
+    """Appends a polynomial with coefficient vector based on coefficient_vector and term to
+            G_coefficient_vectors. """
+
+    if G_coefficient_vectors is None:
+        G_coefficient_vectors = fd(coefficient_vector)
+    else:
+        if first:
+            lt_indices = find_first_non_zero_entries(G_coefficient_vectors)
+        else:
+            lt_indices = find_last_non_zero_entries(G_coefficient_vectors)
+        removable_set = set(list(lt_indices))
+        indices = [x for x in list(range(0, G_coefficient_vectors.shape[0])) if x not in removable_set]
+        if len(indices) == fd(coefficient_vector).shape[0]:
+            updated_coefficient_vector = cp.zeros((G_coefficient_vectors.shape[0], 1))
+            updated_coefficient_vector[indices, :] = fd(coefficient_vector)
+            G_coefficient_vectors = cp.hstack((G_coefficient_vectors, updated_coefficient_vector))
+    return G_coefficient_vectors
