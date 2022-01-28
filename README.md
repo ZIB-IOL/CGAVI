@@ -1,5 +1,9 @@
 # Conditional Gradients For The Approximately Vanishing Ideal 
 
+Code for the paper:
+
+Wirth, E., and Pokutta, S. (2022). Conditional Gradients for the Approximately Vanishing Ideal. To Appear in Proceedings of AISTATS.
+
 ## Installation guide
 Download the repository and store it in your preferred location, say ~/tmp.
 
