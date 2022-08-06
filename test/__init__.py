@@ -1,0 +1,8 @@
+# To run all the tests, run: python -m unittest in the terminal in the project directory.
+
+from os.path import dirname, basename, isfile, join
+import glob
+
+# makes the modules easily loadable
+modules = glob.glob(join(dirname(__file__), "*.py"))
+__all__ = [basename(f)[:-3] for f in modules if isfile(f) and not f.endswith('__init__.py')]

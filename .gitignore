@@ -1,0 +1,17 @@
+# idea
+.idea
+
+# optimized
+__pycache__
+../__pycache__/
+**/__pycache__/
+*/__pycache__/*
+*.py[cod]
+
+# tmux
+tmux-client-76195.log
+tmux-client-76343.log
+tmux-out-76197.log
+tmux-out-76345.log
+tmux-server-76197.log
+tmux-server-76345.log
