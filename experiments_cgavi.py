@@ -54,4 +54,4 @@ def border_type():
 
 if __name__ == '__main__':
     performance()
-    # border_type()
+    border_type()
