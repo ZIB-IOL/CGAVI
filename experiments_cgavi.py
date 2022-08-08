@@ -1,5 +1,5 @@
 from global_ import psis_, Cs_, tos_, degrees_, data_sets_performance_, taus_, border_type_, Cs_single_, \
-    data_sets_comparison_border_types_, data_sets_performance_gb_, data_sets_performance_bb_
+    data_sets_performance_gb_, data_sets_performance_bb_
 from src.experiment_setups.experiment_border_types import comparison_border_types
 from src.experiment_setups.experiment_setups import perform_experiments
 
@@ -53,7 +53,7 @@ def border_type():
                  'border_type': "bb", 'inverse_hessian_boost': 'false'}
 
     comparison_border_types("comparison_border_types", [hp_pcg_gb, hp_pcg_bb, hp_abm_gb, hp_abm_bb],
-                            data_sets_comparison_border_types_)
+                            data_sets_performance_bb_)
 
 
 if __name__ == '__main__':
