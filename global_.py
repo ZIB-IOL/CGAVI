@@ -14,6 +14,8 @@ colors_ = ['red', 'blue', 'orange', 'green', 'purple', 'magenta', 'cyan', 'olive
 
 data_sets_time_trials_ = ['bank', 'htru', 'skin', 'synthetic']
 data_sets_performance_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
+data_sets_performance_gb_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
+data_sets_performance_bb_ = ['bank', 'credit', 'htru', 'seeds', 'skin']
 data_sets_comparison_border_types_ = ['bank', 'credit', 'htru', 'skin']
 tos_ = "deglex"
 border_type_ = "gb"
