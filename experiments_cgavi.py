@@ -3,7 +3,7 @@ from global_ import psis_, Cs_, tos_, degrees_, data_sets_performance_, taus_, b
 from src.experiment_setups.experiment_border_types import comparison_border_types
 from src.experiment_setups.experiment_setups import perform_experiments
 
-psis_ = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005]
+
 def performance():
     hp_agd_gb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': tos_,
                  'border_type': "gb", 'inverse_hessian_boost': 'false'}
@@ -34,7 +34,7 @@ def performance():
     hp_avi_bb = {'algorithm': 'avi', 'C': Cs_single_, 'psi': psis_, 'tau': taus_, 'term_ordering_strategy': tos_,
                  'border_type': "bb"}
 
-    hps_gb = [hp_pcg_gb, hp_agd_gb, hp_abm_gb,  hp_vca, hp_svm, hp_bpcg_gb,   hp_avi_gb]
+    hps_gb = [hp_pcg_gb, hp_agd_gb, hp_abm_gb, hp_vca, hp_svm, hp_bpcg_gb, hp_avi_gb]
     # hps_gb = [hp_bpcg_gb,  hp_avi_gb]
     hps_bb = [hp_pcg_bb, hp_agd_bb, hp_abm_bb, hp_bpcg_bb, hp_avi_bb]
     for hp in hps_gb:
