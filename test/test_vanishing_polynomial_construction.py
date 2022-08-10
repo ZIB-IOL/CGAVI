@@ -16,18 +16,18 @@ class TestFindRangeNullVCA(unittest.TestCase):
             C = cp.random.random((5, int(2 * run)))
             psi = 0.1
 
-            (V_gboefficient_vectors, V_evaluation_vectors, F_gboefficient_vectors, F_evaluation_vectors
+            (V_coefficient_vectors, V_evaluation_vectors, F_coefficient_vectors, F_evaluation_vectors
              ) = find_range_null_vca(F, C, psi=psi)
 
-            if isinstance(F_gboefficient_vectors, cp.ndarray):
-                for i in range(0, F_gboefficient_vectors.shape[1]):
-                    self.assertTrue((abs(fd(cp.hstack((F, C))).dot(F_gboefficient_vectors[:, i])
+            if isinstance(F_coefficient_vectors, cp.ndarray):
+                for i in range(0, F_coefficient_vectors.shape[1]):
+                    self.assertTrue((abs(fd(cp.hstack((F, C))).dot(F_coefficient_vectors[:, i])
                                          - F_evaluation_vectors[:, i]) <= 10e-10).all(), "Error among F polynomials.")
                     self.assertTrue((abs(F_evaluation_vectors[:, i]) > psi).any(), "Error among F polynomials.")
 
-            if isinstance(V_gboefficient_vectors, cp.ndarray):
-                for i in range(0, V_gboefficient_vectors.shape[1]):
-                    self.assertTrue((abs(fd(cp.hstack((F, C))).dot(V_gboefficient_vectors[:, i])
+            if isinstance(V_coefficient_vectors, cp.ndarray):
+                for i in range(0, V_coefficient_vectors.shape[1]):
+                    self.assertTrue((abs(fd(cp.hstack((F, C))).dot(V_coefficient_vectors[:, i])
                                          - V_evaluation_vectors[:, i]) <= 10e-10).all(), "Error among V polynomials.")
                     self.assertTrue((1/5*cp.linalg.norm((V_evaluation_vectors[:, i]))**2 <= psi).all(),
                                     "Error among V polynomials.")

@@ -23,14 +23,14 @@ def orthogonal_projection(vectors: cp.ndarray, vector: cp.ndarray):
         vector: cp.ndarray
 
     Returns:
-        orthogonal_gbomponents: cp.ndarray
+        orthogonal_components: cp.ndarray
             A column vector of the form (vector.T.dot(vectors)).T.
     """
     vector = fd(vector)
     vectors = fd(vectors)
     assert vectors.shape[0] == vector.shape[0], "Vectors have to be of identical length."
-    orthogonal_gbomponents = (vector.T.dot(vectors)).T
-    return fd(orthogonal_gbomponents)
+    orthogonal_components = (vector.T.dot(vectors)).T
+    return fd(orthogonal_components)
 
 
 def translate_names(hyperparameters, ordering: bool = True, inverse_hessian_boost: bool = True,

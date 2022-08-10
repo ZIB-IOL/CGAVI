@@ -1,16 +1,14 @@
 import numpy as np
 from global_ import psis_single_, psis_, Cs_, degrees_, data_sets_performance_, data_sets_time_trials_, \
-    Cs_single_, border_type_
+    Cs_single_, border_type_, tos_
 from src.auxiliary_functions.auxiliary_functions import G_O_bound_vectorized
 from src.experiment_setups.experiment_setups import perform_experiments
 from src.experiment_setups.experiment_termination_theory_v_practice import termination_theory_v_practice
 from src.experiment_setups.experiment_time_trials import time_trials
 from src.plotting.plotting_functions import plotter
 
-tos_ = "pearson"
 
-
-def term_ordering_gbomparsion():
+def term_ordering_comparsion():
     hp_pearson = {'algorithm': 'oavi', 'oracle_type': 'CG', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': 'pearson',
                   'border_type': border_type_, 'inverse_hessian_boost': 'full'}
     hp_pearson_rev = {'algorithm': 'oavi', 'oracle_type': 'CG', 'psi': psis_, 'C': Cs_, 'border_type': border_type_,
@@ -64,7 +62,7 @@ def time_BPCG_v_IHB_v_WIHB():
     time_trials("time_ihb", hyperparameters, data_sets_time_trials_)
 
 
-def time_gbomparison():
+def time_comparison():
     hp_CGAVI_IHB = {'algorithm': 'oavi', 'oracle_type': 'CG', 'psi': psis_, 'C': Cs_,
                     'term_ordering_strategy': tos_, 'border_type': border_type_, 'inverse_hessian_boost': 'full'}
     hp_AGDAVI_IHB = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': tos_,
@@ -88,10 +86,10 @@ def time_PCG_v_BPCG():
 
 
 if __name__ == '__main__':
-    term_ordering_gbomparsion()
+    # term_ordering_comparsion()
     performance()
     termination_graphic()
     termination_theory_v_practice(10000, list(range(2, 25, 3)), psis_single_[0])
     time_BPCG_v_IHB_v_WIHB()
-    time_gbomparison()
+    time_comparison()
     time_PCG_v_BPCG()

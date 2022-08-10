@@ -6,7 +6,7 @@ from src.oracles.accelerated_gradient_descent import AcceleratedGradientDescent
 from src.oracles.conditional_gradients import ConditionalGradients
 from src.oracles.feasible_regions import L1Ball, L2Ball
 from src.oracles.objective_functions import L2Loss
-from src.feature_transformations.auxiliary_functions_avi import update_gboefficient_vectors, streaming_matrix_updates
+from src.feature_transformations.auxiliary_functions_avi import update_coefficient_vectors, streaming_matrix_updates
 from src.feature_transformations.terms_and_polynomials import SetsOAndG
 
 
@@ -18,14 +18,14 @@ class OracleAVI:
         psi: float, Optional
             Determines how stronlgy vanishing the polynomials are going to be. (Default is 0.1.)
         eps: float, Optional
-            Determines the accuracy of the oracle. (Default is 0.01.)
+            Determines the accuracy of the oracle. (Default is 0.001.)
         tau: float, Optional
             Determines the radius of CCOP. (Default is 1000.)
         lmbda: float, Optional
             The L2 regularization parameter. (Default is 0.0.)
         tol: float, Optional
             If no improvement in loss over the last iteration of at least psi * tol is made, terminates the algorithm.
-            (Default is 0.0001.)
+            (Default is 0.000001.)
         max_degree: int, Optional
             Maximum degree of the polynomials we construct. (Default is 10.)
         objective_type: str, Optional
@@ -75,10 +75,10 @@ class OracleAVI:
 
     def __init__(self,
                  psi: float = 0.1,
-                 eps: float = 0.01,
+                 eps: float = 0.001,
                  tau: float = 1000,
                  lmbda: float = 0.0,
-                 tol: float = 0.0001,
+                 tol: float = 0.000001,
                  max_degree: int = 10,
                  objective_type: str = "L2Loss",
                  region_type: str = "L1Ball",
@@ -147,7 +147,7 @@ class OracleAVI:
             border_terms, border_evaluations = self.sets_avi.construct_border()
             O_indices = []
             leading_terms = []
-            G_gboefficient_vectors = None
+            G_coefficient_vectors = None
 
             data = fd(self.sets_avi.O_array_evaluations)
             data_squared = data.T.dot(data)
@@ -157,9 +157,9 @@ class OracleAVI:
                 data_squared_inverse = cp.array(np.linalg.inv(data_squared))
 
             for column_index in range(0, border_terms.shape[1]):
-                if G_gboefficient_vectors is not None:
-                    G_gboefficient_vectors = cp.vstack((G_gboefficient_vectors,
-                                                       cp.zeros((1, G_gboefficient_vectors.shape[1]))))
+                if G_coefficient_vectors is not None:
+                    G_coefficient_vectors = cp.vstack((G_coefficient_vectors,
+                                                       cp.zeros((1, G_coefficient_vectors.shape[1]))))
 
                 term_evaluated = fd(border_evaluations[:, column_index])
                 data_term_evaluated = data.T.dot(term_evaluated)
@@ -171,7 +171,7 @@ class OracleAVI:
                 # If polynomial vanishes, append the polynomial to G, otherwise append the leading term to O.
                 if loss <= self.psi:
                     leading_terms.append(int(column_index))
-                    G_gboefficient_vectors = update_gboefficient_vectors(G_gboefficient_vectors, coefficient_vector)
+                    G_coefficient_vectors = update_coefficient_vectors(G_coefficient_vectors, coefficient_vector)
                 else:
                     O_indices.append(int(column_index))
                     data, data_squared, data_squared_inverse = streaming_matrix_updates(
@@ -179,7 +179,7 @@ class OracleAVI:
                         data_squared_inverse)
 
             self.sets_avi.update_leading_terms(fd(border_terms[:, leading_terms]))
-            self.sets_avi.update_G(G_gboefficient_vectors)
+            self.sets_avi.update_G(G_coefficient_vectors)
 
             if not O_indices:
                 break
@@ -208,7 +208,6 @@ class OracleAVI:
             coefficient_vector: cp.ndarray
             loss: float
         """
-
         if self.oracle_type is not "ABM":
             if self.objective_type == "L2Loss":
                 objective = L2Loss(data, labels, self.lmbda, data_squared=data_squared,
@@ -237,7 +236,7 @@ class OracleAVI:
                                               max_iterations=self.max_iterations,
                                               tol=self.tol,
                                               inverse_hessian_boost="full")
-                tmp_gboefficient_vector, loss_list, _ = oracle.optimize()
+                tmp_coefficient_vector, loss_list, _ = oracle.optimize()
                 loss = float(loss_list[-1])
                 if loss <= self.psi:
                     oracle = ConditionalGradients(objective_function=objective,
@@ -248,13 +247,14 @@ class OracleAVI:
                                                   max_iterations=self.max_iterations,
                                                   tol=self.tol,
                                                   inverse_hessian_boost="false")
-                    tmp_gboefficient_vector_2, loss_list_2, _ = oracle.optimize()
+                    tmp_coefficient_vector_2, loss_list_2, _ = oracle.optimize()
                     loss_2 = float(loss_list_2[-1])
 
+                    print("loss_2 <= self.psi:", loss_2 <= self.psi)
                     if loss_2 <= self.psi:
-                        tmp_gboefficient_vector = tmp_gboefficient_vector_2
+                        tmp_coefficient_vector = tmp_coefficient_vector_2
                         loss = loss_2
-                coefficient_vector = fd(cp.vstack((fd(tmp_gboefficient_vector), fd(cp.array([[1.0]])))))
+                coefficient_vector = fd(cp.vstack((fd(tmp_coefficient_vector), fd(cp.array([[1.0]])))))
             else:
                 if self.oracle_type in ["CG", "PCG", "BPCG"]:
                     oracle = ConditionalGradients(objective_function=objective,
@@ -274,10 +274,10 @@ class OracleAVI:
                                                         tol=self.tol,
                                                         inverse_hessian_boost=self.inverse_hessian_boost)
 
-                tmp_gboefficient_vector, loss_list, _ = oracle.optimize()
+                tmp_coefficient_vector, loss_list, _ = oracle.optimize()
                 del region, objective, oracle
                 loss = float(loss_list[-1])
-                coefficient_vector = fd(cp.vstack((fd(tmp_gboefficient_vector), fd(cp.array([[1.0]])))))
+                coefficient_vector = fd(cp.vstack((fd(tmp_coefficient_vector), fd(cp.array([[1.0]])))))
         # ABM
         else:
             data_with_labels = cp.hstack((data, labels))

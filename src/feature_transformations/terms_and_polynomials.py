@@ -31,7 +31,7 @@ class SetsOAndG:
             Updates O_evaluations.
         update_O_indices(O_indices: list)
             Updates O_indices.
-        update_G(G_gboefficient_vectors: cp.ndarray)
+        update_G(G_coefficient_vectors: cp.ndarray)
             Updates G.
         update_leading_terms(leading_terms: cp.ndarray)
             Updates leading terms of generators in G.
@@ -42,7 +42,7 @@ class SetsOAndG:
         construct_border()
             Constructs the border of O_terms for the current state of the algorithm.
         evaluate_transformation()
-            Evaluates the transformation corresponding to the polynomials in G_gboefficient_vectors.
+            Evaluates the transformation corresponding to the polynomials in G_coefficient_vectors.
 
     References:
         [1] Heldt, D., Kreuzer, M., Pokutta, S. and Poulisse, H., 2009. Approximate computation of zero-dimensional
@@ -87,16 +87,16 @@ class SetsOAndG:
         self.O_array_evaluations = fd(self.O_evaluations[0])
 
         # List of coefficient vectors by degree
-        self.G_gboefficient_vectors = [None]
+        self.G_coefficient_vectors = [None]
         # List of all evaluation vectors of generators of G by degree
         self.G_evaluations = None
 
         # Example:
         # self.O_terms = [O0, O1, O2, ...], self.border_terms_purged = [None, border1, border2, ...], and
-        # self.G_gboefficient_vectors = [None, G_gboefficient_vectors1, G_gboefficient_vectors2, ...]. Then, evaluations
+        # self.G_coefficient_vectors = [None, G_coefficient_vectors1, G_coefficient_vectors2, ...]. Then, evaluations
         # of generators of degree 1 are computed via
-        # cp.array([O0, O1, border1]) G_gboefficient_vectors1.T and valuations of generators of degree 2
-        # are cp.array([O0, O1, O2, border2]) cp.array([G_gboefficient_vectors1, G_gboefficient_vectors2]).T.
+        # cp.array([O0, O1, border1]) G_coefficient_vectors1.T and valuations of generators of degree 2
+        # are cp.array([O0, O1, O2, border2]) cp.array([G_coefficient_vectors1, G_coefficient_vectors2]).T.
 
         # cp.ndarray of leading terms of polynomials in G
         self.leading_terms = None
@@ -140,18 +140,18 @@ class SetsOAndG:
         """Updates O_indices."""
         self.O_indices.append(O_indices)
 
-    def update_G(self, G_gboefficient_vectors: cp.ndarray):
+    def update_G(self, G_coefficient_vectors: cp.ndarray):
         """Updates G."""
-        if G_gboefficient_vectors is not None:
+        if G_coefficient_vectors is not None:
             if self.G_evaluations is None:
                 self.G_evaluations = fd(cp.hstack((self.O_array_evaluations,
-                                                   self.border_evaluations_purged[-1])).dot(G_gboefficient_vectors))
+                                                   self.border_evaluations_purged[-1])).dot(G_coefficient_vectors))
             else:
                 current_G_evaluations = fd(cp.hstack((self.O_array_evaluations,
                                                       self.border_evaluations_purged[-1])).dot(
-                    G_gboefficient_vectors))
+                    G_coefficient_vectors))
                 self.G_evaluations = cp.hstack((self.G_evaluations, current_G_evaluations))
-        self.G_gboefficient_vectors.append(G_gboefficient_vectors)
+        self.G_coefficient_vectors.append(G_coefficient_vectors)
 
     def update_leading_terms(self, leading_terms: cp.ndarray):
         """Updates leading terms of generators in G."""
@@ -169,7 +169,7 @@ class SetsOAndG:
         # Degree-1 border
         i = 1
         test_sets_avi.update_border_purged(None, X_test)
-        test_sets_avi.update_G(self.G_gboefficient_vectors[i])
+        test_sets_avi.update_G(self.G_coefficient_vectors[i])
         if i < len(self.O_evaluations):
             test_sets_avi.update_O_evaluations(fd(X_test[:, self.O_indices[i]]))
 
@@ -186,7 +186,7 @@ class SetsOAndG:
                                                                       non_purging_indices=self.non_purging_indices[i])
             test_sets_avi.update_border_purged(None, border_test_purged)
 
-            test_sets_avi.update_G(self.G_gboefficient_vectors[i])
+            test_sets_avi.update_G(self.G_coefficient_vectors[i])
             if i < len(self.O_evaluations):
                 test_sets_avi.update_O_evaluations(fd(border_test_purged[:, self.O_indices[i]]))
             i += 1
@@ -228,15 +228,15 @@ class SetsOAndG:
         return self.border_terms_purged[-1], self.border_evaluations_purged[-1]
 
     def evaluate_transformation(self):
-        """Evaluates the transformation corresponding to the polynomials in G_gboefficient_vectors.
+        """Evaluates the transformation corresponding to the polynomials in G_coefficient_vectors.
 
         Returns:
             total_number_of_zeros: int
-                Sum of all zero entries in coefficient vectors in G_gboefficient_vectors.
+                Sum of all zero entries in coefficient vectors in G_coefficient_vectors.
             total_number_of_entries: int
-                Total number of entries in coefficient vectors in G_gboefficient_vectors.
+                Total number of entries in coefficient vectors in G_coefficient_vectors.
             avg_sparsity: float
-                The average sparsity of coefficient vectors in G_gboefficient_vectors.
+                The average sparsity of coefficient vectors in G_coefficient_vectors.
             number_of_polynomials: int
                 Number of polynomials in G.
             number_of_terms: int
@@ -245,8 +245,8 @@ class SetsOAndG:
                 Average degree of polynomials in G.
         """
         number_of_polynomials, total_number_of_zeros, total_number_of_entries, avg_sparsity, degree = 0, 0, 0, 0.0, 0
-        for i in range(0, len(self.G_gboefficient_vectors)):
-            coefficient_vectors = self.G_gboefficient_vectors[i]
+        for i in range(0, len(self.G_coefficient_vectors)):
+            coefficient_vectors = self.G_coefficient_vectors[i]
             if coefficient_vectors is not None:
                 if not isinstance(coefficient_vectors, cp.ndarray):
                     coefficient_vectors = coefficient_vectors.toarray()
@@ -283,11 +283,11 @@ class SetsVCA:
 
 
     Methods:
-        update_F(F_gboefficient_vectors: cp.ndarray, F_evaluation_vectors: cp.ndarray)
+        update_F(F_coefficient_vectors: cp.ndarray, F_evaluation_vectors: cp.ndarray)
             Updates F.
         F_to_array()
             Transforms F into one array.
-        update_V(V_gboefficient_vectors: cp.ndarray, V_evaluation_vectors: cp.ndarray)
+        update_V(V_coefficient_vectors: cp.ndarray, V_evaluation_vectors: cp.ndarray)
             Updates V.
         V_to_array()
             Transforms V into one array.
@@ -316,17 +316,17 @@ class SetsVCA:
         else:
             self.m = m
         self.Fs = [fd(cp.ones((self.X.shape[0], 1)) / cp.sqrt(self.m))]
-        self.F_gboefficient_vectors = [cp.array([[1]])]
+        self.F_coefficient_vectors = [cp.array([[1]])]
 
         # V
         self.Vs = []
-        self.V_gboefficient_vectors = []
+        self.V_coefficient_vectors = []
 
-    def update_F(self, F_gboefficient_vectors: cp.ndarray, F_evaluation_vectors: cp.ndarray):
+    def update_F(self, F_coefficient_vectors: cp.ndarray, F_evaluation_vectors: cp.ndarray):
         """Updates F."""
-        assert (isinstance(F_gboefficient_vectors, cp.ndarray), "New Fs should not be empty.")
+        assert (isinstance(F_coefficient_vectors, cp.ndarray), "New Fs should not be empty.")
         assert isinstance(F_evaluation_vectors, cp.ndarray), "New Fs should not be empty."
-        self.F_gboefficient_vectors.append(fd(F_gboefficient_vectors))
+        self.F_coefficient_vectors.append(fd(F_coefficient_vectors))
         self.Fs.append(fd(F_evaluation_vectors))
 
     def F_to_array(self):
@@ -340,17 +340,17 @@ class SetsVCA:
                     F_array = cp.hstack((F_array, fd(F)))
         return F_array
 
-    def update_V(self, V_gboefficient_vectors: cp.ndarray, V_evaluation_vectors: cp.ndarray):
+    def update_V(self, V_coefficient_vectors: cp.ndarray, V_evaluation_vectors: cp.ndarray):
         """Updates V."""
         V_vectors = None
         V_evaluations = None
 
-        if isinstance(V_gboefficient_vectors, cp.ndarray):
-            V_vectors = fd(V_gboefficient_vectors)
+        if isinstance(V_coefficient_vectors, cp.ndarray):
+            V_vectors = fd(V_coefficient_vectors)
             assert (isinstance(V_evaluation_vectors, cp.ndarray), "Evaluation vectors have to be cp.arrays.")
             V_evaluations = fd(V_evaluation_vectors)
         self.Vs.append(V_evaluations)
-        self.V_gboefficient_vectors.append(V_vectors)
+        self.V_coefficient_vectors.append(V_vectors)
 
     def V_to_array(self):
         """Transforms V into one array."""
@@ -372,25 +372,25 @@ class SetsVCA:
             sets_VCA_test.update_C(border)
             degree += 1
 
-            V_gboefficients_test = None
-            if degree - 2 < len(self.V_gboefficient_vectors):
-                V_gboefficients_test = self.V_gboefficient_vectors[degree - 2]
+            V_coefficients_test = None
+            if degree - 2 < len(self.V_coefficient_vectors):
+                V_coefficients_test = self.V_coefficient_vectors[degree - 2]
 
-            if isinstance(V_gboefficients_test, cp.ndarray):
-                V_evalutations_test = (fd(V_gboefficients_test).T.dot(
+            if isinstance(V_coefficients_test, cp.ndarray):
+                V_evalutations_test = (fd(V_coefficients_test).T.dot(
                     (cp.hstack((fd(cp.hstack(sets_VCA_test.Fs)), fd(sets_VCA_test.Cs[-1])))).T)).T
             else:
                 V_evalutations_test = None
-            sets_VCA_test.update_V(V_gboefficients_test, V_evalutations_test)
+            sets_VCA_test.update_V(V_coefficients_test, V_evalutations_test)
 
-            F_gboefficients_test = None
-            if degree - 1 < len(self.F_gboefficient_vectors):
-                F_gboefficients_test = fd(self.F_gboefficient_vectors[degree - 1])
+            F_coefficients_test = None
+            if degree - 1 < len(self.F_coefficient_vectors):
+                F_coefficients_test = fd(self.F_coefficient_vectors[degree - 1])
 
-            if isinstance(F_gboefficients_test, cp.ndarray):
-                F_evaluations_test = (fd(F_gboefficients_test).T.dot(
+            if isinstance(F_coefficients_test, cp.ndarray):
+                F_evaluations_test = (fd(F_coefficients_test).T.dot(
                     (cp.hstack((fd(cp.hstack(sets_VCA_test.Fs)), fd(sets_VCA_test.Cs[-1])))).T)).T
-                sets_VCA_test.update_F(F_gboefficients_test, F_evaluations_test)
+                sets_VCA_test.update_F(F_coefficients_test, F_evaluations_test)
             else:
                 break
         X_test_transformed = sets_VCA_test.V_to_array()
@@ -405,10 +405,10 @@ class SetsVCA:
         """Constructs the border for the current state of the algorithm."""
         if degree != 1:
             F1 = self.Fs[1]
-            F_gburrent = self.Fs[-1]
-            F1_tile = cp.tile(F1, (1, F_gburrent.shape[1]))
-            F_gburrent_repeat = cp.repeat(F_gburrent, repeats=F1.shape[1], axis=1)
-            border = cp.multiply(F1_tile, F_gburrent_repeat)
+            F_current = self.Fs[-1]
+            F1_tile = cp.tile(F1, (1, F_current.shape[1]))
+            F_current_repeat = cp.repeat(F_current, repeats=F1.shape[1], axis=1)
+            border = cp.multiply(F1_tile, F_current_repeat)
         else:
             border = self.X
         return border
@@ -418,21 +418,21 @@ class SetsVCA:
 
         Returns:
             total_number_of_zeros: int
-                Sum of all zero entries in coefficient vectors in V_gboefficient_vectors.
+                Sum of all zero entries in coefficient vectors in V_coefficient_vectors.
             total_number_of_entries: int
-                Total number of entries in coefficient vectors in V_gboefficient_vectors.
+                Total number of entries in coefficient vectors in V_coefficient_vectors.
             avg_sparsity: float
-                The average sparsity of coefficient vectors in V_gboefficient_vectors.
+                The average sparsity of coefficient vectors in V_coefficient_vectors.
             number_of_polynomials: int
-                Number of polynomials in V_gboefficient_vectors.
+                Number of polynomials in V_coefficient_vectors.
             degree: int
                 Average degree of polynomials in V.
         """
         total_number_of_zeros, total_number_of_entries, avg_sparsity, degree = 0, 0, 0.0, 0
         number_of_polynomials = 0
 
-        for i in range(0, len(self.V_gboefficient_vectors)):
-            coefficient_vectors = self.V_gboefficient_vectors[i]
+        for i in range(0, len(self.V_coefficient_vectors)):
+            coefficient_vectors = self.V_coefficient_vectors[i]
             if coefficient_vectors is not None:
                 if not isinstance(coefficient_vectors, cp.ndarray):
                     coefficient_vectors = coefficient_vectors.toarray()

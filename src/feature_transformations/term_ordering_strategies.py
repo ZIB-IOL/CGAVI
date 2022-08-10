@@ -12,13 +12,13 @@ def pearson(data: cp.ndarray, rev: bool = False):
                     [0.70923467 1.         0.24277391]
                     [0.85606541 0.24277391 1.        ]]
         we compute
-                corr_gboeff = [[1.         0.70923467 0.85606541]
+                corr_coeff = [[1.         0.70923467 0.85606541]
                             [0.70923467 1.         0.24277391]
                             [0.85606541 0.24277391 1.        ]]
         and
                 corr_sum = [2.5653000783896567, 1.952008578360136, 2.0988393103629104].
         Then we call argsot_list() on corr_sum and if rev = True, reverse the result, that is, for rev = False, we get
-        sort_gbols = [1, 2, 0] as the output of the function.
+        sort_cols = [1, 2, 0] as the output of the function.
 
     Args:
         data: cp.ndarray
@@ -28,16 +28,16 @@ def pearson(data: cp.ndarray, rev: bool = False):
             (Default is False.)
 
     Returns:
-        sort_gbols: list
-            A list of integers such that data[:, sort_gbols] is such that its columns are increasing / decreasing in
+        sort_cols: list
+            A list of integers such that data[:, sort_cols] is such that its columns are increasing / decreasing in
             the sum of absolute correlation coefficients.
     """
     if fd(data).shape[1] == 1:
         return [0]
     else:
-        corr_gboeff = cp.abs(cp.corrcoef(data, rowvar=False))
-        corr_sum = cp.sum(corr_gboeff, axis=1).tolist()
-        sort_gbols = argsort_list(corr_sum)
+        corr_coeff = cp.abs(cp.corrcoef(data, rowvar=False))
+        corr_sum = cp.sum(corr_coeff, axis=1).tolist()
+        sort_cols = argsort_list(corr_sum)
         if rev:
-            sort_gbols.reverse()
-        return sort_gbols
+            sort_cols.reverse()
+        return sort_cols

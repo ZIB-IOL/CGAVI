@@ -1,6 +1,6 @@
 import cupy as cp
 import unittest
-from src.auxiliary_functions.sorting import sort_by_pivot, deg_lex_sort, compute_degree, get_unique_gbolumns
+from src.auxiliary_functions.sorting import sort_by_pivot, deg_lex_sort, compute_degree, get_unique_columns
 
 
 class TestSorting(unittest.TestCase):
@@ -25,14 +25,14 @@ class TestSorting(unittest.TestCase):
         self.assertTrue((self.matrix_sorted == matrix_sorted_2).all(), "Matrix not sorted correctly.")
         deg_lex_sort(cp.array([[1]]))
 
-    def test_get_unique_gbolumns(self):
-        """Tests whether get_unique_gbolumns() beahves as intended."""
-        matrix_unique_1, matrix_unique_2, _ = get_unique_gbolumns(self.matrix, self.matrix)
+    def test_get_unique_columns(self):
+        """Tests whether get_unique_columns() beahves as intended."""
+        matrix_unique_1, matrix_unique_2, _ = get_unique_columns(self.matrix, self.matrix)
         self.assertTrue((self.matrix_sorted_unique == matrix_unique_1).all(), "Matrix not sorted correctly.")
         self.assertTrue((self.matrix_sorted_unique == matrix_unique_2).all(), "Matrix not sorted correctly.")
-        get_unique_gbolumns(cp.array([[1]]))
+        get_unique_columns(cp.array([[1]]))
 
-    def test_gbompute_degree(self):
+    def test_compute_degree(self):
         """Tests whether compute_degree() behaves as intended."""
         self.assertTrue(compute_degree(self.matrix) == [2, 6, 6, 9, 6], "Degrees are not computed correctly.")
 

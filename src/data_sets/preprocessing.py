@@ -3,7 +3,7 @@ from src.auxiliary_functions.auxiliary_functions import fd
 from sklearn.preprocessing import MinMaxScaler
 
 
-def unison_shuffled_gbopies(array_1: np.ndarray, array_2: np.ndarray):
+def unison_shuffled_copies(array_1: np.ndarray, array_2: np.ndarray):
     """Shuffles the rows of two numpy arrays in unison."""
     assert len(array_1) == len(array_2)
     p = np.random.permutation(array_1.shape[0])
@@ -60,7 +60,7 @@ def min_max_feature_scaling(X_train: np.ndarray, X_test: np.ndarray):
     return X_train_scaled, X_test_scaled
 
 
-def split_into_gblasses(X: np.ndarray, y: np.ndarray):
+def split_into_classes(X: np.ndarray, y: np.ndarray):
     """Splits the data X into a list containing the subsets corresponding to samples of one class."""
     values = set(y.flatten().tolist())
     values = list(values)

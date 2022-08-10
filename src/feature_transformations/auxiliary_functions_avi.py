@@ -3,7 +3,7 @@ import cupy as cp
 import numpy as np
 from src.auxiliary_functions.auxiliary_functions import fd
 from src.auxiliary_functions.indices import find_last_non_zero_entries, find_first_non_zero_entries
-from src.auxiliary_functions.sorting import get_unique_gbolumns
+from src.auxiliary_functions.sorting import get_unique_columns
 
 
 def construct_border(terms: cp.ndarray, terms_evaluated: cp.ndarray, X_train: cp.ndarray,
@@ -48,7 +48,7 @@ def construct_border(terms: cp.ndarray, terms_evaluated: cp.ndarray, X_train: cp
         degree_1_terms_evaluated_tile = cp.tile(degree_1_terms_evaluated, (1, terms_evaluated.shape[1]))
         border_evaluations_raw = cp.multiply(degree_1_terms_evaluated_tile, terms_evaluated_repeat)
 
-    border_terms_purged, border_evaluations_purged, unique_indices = get_unique_gbolumns(
+    border_terms_purged, border_evaluations_purged, unique_indices = get_unique_columns(
         border_terms_raw, border_evaluations_raw)
 
     if purging_terms is not None:
@@ -78,22 +78,22 @@ def purge(terms: cp.ndarray, terms_evaluated: cp.ndarray, purging_terms: cp.ndar
     return terms[:, indices], terms_evaluated[:, indices], indices
 
 
-def update_gboefficient_vectors(G_gboefficient_vectors: cp.ndarray, coefficient_vector: cp.ndarray, first: bool = False):
-    """Appends a polynomial with coefficient vector based on coefficient_vector and term to G_gboefficient_vectors."""
-    if G_gboefficient_vectors is None:
-        G_gboefficient_vectors = fd(coefficient_vector)
+def update_coefficient_vectors(G_coefficient_vectors: cp.ndarray, coefficient_vector: cp.ndarray, first: bool = False):
+    """Appends a polynomial with coefficient vector based on coefficient_vector and term to G_coefficient_vectors."""
+    if G_coefficient_vectors is None:
+        G_coefficient_vectors = fd(coefficient_vector)
     else:
         if first:
-            lt_indices = find_first_non_zero_entries(G_gboefficient_vectors)
+            lt_indices = find_first_non_zero_entries(G_coefficient_vectors)
         else:
-            lt_indices = find_last_non_zero_entries(G_gboefficient_vectors)
+            lt_indices = find_last_non_zero_entries(G_coefficient_vectors)
         removable_set = set(list(lt_indices))
-        indices = [x for x in list(range(0, G_gboefficient_vectors.shape[0])) if x not in removable_set]
+        indices = [x for x in list(range(0, G_coefficient_vectors.shape[0])) if x not in removable_set]
         if len(indices) == fd(coefficient_vector).shape[0]:
-            updated_gboefficient_vector = cp.zeros((G_gboefficient_vectors.shape[0], 1))
-            updated_gboefficient_vector[indices, :] = fd(coefficient_vector)
-            G_gboefficient_vectors = cp.hstack((G_gboefficient_vectors, updated_gboefficient_vector))
-    return G_gboefficient_vectors
+            updated_coefficient_vector = cp.zeros((G_coefficient_vectors.shape[0], 1))
+            updated_coefficient_vector[indices, :] = fd(coefficient_vector)
+            G_coefficient_vectors = cp.hstack((G_coefficient_vectors, updated_coefficient_vector))
+    return G_coefficient_vectors
 
 
 def streaming_matrix_updates(A: cp.ndarray, A_squared: cp.ndarray, A_a: cp.ndarray, a: cp.ndarray, a_squared: float,

@@ -1,7 +1,7 @@
 import unittest
 import cupy as cp
 import numpy as np
-from src.data_sets.preprocessing import min_max_feature_scaling, split_into_gblasses
+from src.data_sets.preprocessing import min_max_feature_scaling, split_into_classes
 
 
 class TestPreprocessing(unittest.TestCase):
@@ -26,8 +26,8 @@ class TestPreprocessing(unittest.TestCase):
                                               [-5, 1,
                                                -2 / 3]])) <= 10e-5).all(), "min_max_feature_scaling has an error."
 
-    def test_split_into_gblasses(self):
-        """Tests whether split_into_gblasses() behaves as intended."""
+    def test_split_into_classes(self):
+        """Tests whether split_into_classes() behaves as intended."""
 
         # In cupy
         X = cp.array([[1, 1],
@@ -40,7 +40,7 @@ class TestPreprocessing(unittest.TestCase):
                       [5, 5]])
         y = X[:, 0]
 
-        Xs = split_into_gblasses(X, y)
+        Xs = split_into_classes(X, y)
         self.assertTrue((Xs[0] == cp.array([[0, 0],
                                             [0, 0]])).all(), "Wrong split.")
         self.assertTrue((Xs[1] == cp.array([[1, 1],
@@ -61,7 +61,7 @@ class TestPreprocessing(unittest.TestCase):
                       [5, 5]])
         y = X[:, 0]
 
-        Xs = split_into_gblasses(X, y)
+        Xs = split_into_classes(X, y)
         self.assertTrue((Xs[0] == np.array([[0, 0],
                                             [0, 0]])).all(), "Wrong split.")
         self.assertTrue((Xs[1] == np.array([[1, 1],

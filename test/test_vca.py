@@ -40,27 +40,27 @@ class TestVCA(unittest.TestCase):
                     X_test_transformed = cp.array(X_test_transformed.toarray())
                 self.assertTrue((X_train_transformed - X_test_transformed <= 1e-10).all(), "Should be identical.")
 
-                F_train_gboeffs = set_train.F_gboefficient_vectors
-                F_test_gboeffs = set_test.F_gboefficient_vectors
-                self.assertTrue(len(F_train_gboeffs) == len(F_test_gboeffs),
+                F_train_coeffs = set_train.F_coefficient_vectors
+                F_test_coeffs = set_test.F_coefficient_vectors
+                self.assertTrue(len(F_train_coeffs) == len(F_test_coeffs),
                                 "Lenghts should be identical for identical data.")
-                for idx in range(0, len(F_train_gboeffs)):
-                    F_train_gboeffs_gbp = F_train_gboeffs[idx]
-                    F_test_gboeffs_gbp = F_test_gboeffs[idx]
-                    self.assertTrue((abs(F_train_gboeffs_gbp - F_test_gboeffs_gbp) <= 10e-10).all(),
+                for idx in range(0, len(F_train_coeffs)):
+                    F_train_coeffs_cp = F_train_coeffs[idx]
+                    F_test_coeffs_cp = F_test_coeffs[idx]
+                    self.assertTrue((abs(F_train_coeffs_cp - F_test_coeffs_cp) <= 10e-10).all(),
                                     "Entries should be identical for identical data.")
 
-                V_train_gboeffs = set_train.V_gboefficient_vectors
-                V_test_gboeffs = set_test.V_gboefficient_vectors
-                self.assertTrue(len(V_train_gboeffs) == len(V_test_gboeffs),
+                V_train_coeffs = set_train.V_coefficient_vectors
+                V_test_coeffs = set_test.V_coefficient_vectors
+                self.assertTrue(len(V_train_coeffs) == len(V_test_coeffs),
                                 "Lenghts should be identical for identical data.")
-                for idx in range(0, len(V_train_gboeffs)):
-                    if V_train_gboeffs[idx] is None:
-                        self.assertTrue(V_test_gboeffs[idx] is None, "Entries should be identical for identical data.")
+                for idx in range(0, len(V_train_coeffs)):
+                    if V_train_coeffs[idx] is None:
+                        self.assertTrue(V_test_coeffs[idx] is None, "Entries should be identical for identical data.")
                     else:
-                        V_train_gboeffs_gbp = V_train_gboeffs[idx]
-                        V_test_gboeffs_gbp = V_test_gboeffs[idx]
-                        self.assertTrue((abs(V_train_gboeffs_gbp - V_test_gboeffs_gbp) <= 10e-10).all(),
+                        V_train_coeffs_cp = V_train_coeffs[idx]
+                        V_test_coeffs_cp = V_test_coeffs[idx]
+                        self.assertTrue((abs(V_train_coeffs_cp - V_test_coeffs_cp) <= 10e-10).all(),
                                         "Entries should be identical for identical data.")
 
     def test_evaluate_transformation(self):

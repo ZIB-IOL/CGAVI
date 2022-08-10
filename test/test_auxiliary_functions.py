@@ -23,8 +23,8 @@ class TestAuxiliaryFunctions(unittest.TestCase):
         b = cp.array([[1],
                       [1]])
 
-        orthogonal_gbomponents = orthogonal_projection(A, b)
-        self.assertTrue((orthogonal_gbomponents == cp.array([[1], [1.5]])).all(),
-                        "Returned orthogonal_gbomponents are incorrect.")
+        orthogonal_components = orthogonal_projection(A, b)
+        self.assertTrue((orthogonal_components == cp.array([[1], [1.5]])).all(),
+                        "Returned orthogonal_components are incorrect.")
 
 

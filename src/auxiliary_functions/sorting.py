@@ -93,7 +93,7 @@ def row_sort(matrix: cp.ndarray):
     return matrix
 
 
-def get_unique_gbolumns(matrix_1: cp.ndarray, matrix_2: cp.ndarray = None):
+def get_unique_columns(matrix_1: cp.ndarray, matrix_2: cp.ndarray = None):
     """Returns only the unique columns of matrix_1 sorted, and, if provided, the corresponding columns of matrix_2."""
     sorted_matrix, sorted_matrix_2, sorted_list = deg_lex_sort(matrix_1, matrix_2)
     unique_indices = [0]

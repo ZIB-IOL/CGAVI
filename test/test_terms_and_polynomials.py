@@ -14,7 +14,7 @@ class TestSetsOAndG(unittest.TestCase):
 
         sets_avi = SetsOAndG(X_train)
 
-        sets_avi.G_gboefficient_vectors = [None, None, cp.array([[1, 0],
+        sets_avi.G_coefficient_vectors = [None, None, cp.array([[1, 0],
                                                                 [2, 1],
                                                                 [3, 0],
                                                                 [0, 3]]), None, cp.array([[1, 1, 1, 1],
@@ -48,44 +48,44 @@ class TestSetsVCA(unittest.TestCase):
         self.assertTrue((sets_vca.X == fd(X)).all(), "Should be identical.")
         self.assertTrue(sets_vca.Cs == [], "Should be identical.")
         self.assertTrue(sets_vca.Vs == [], "Should be identical.")
-        self.assertTrue(sets_vca.V_gboefficient_vectors == [], "Should be identical.")
+        self.assertTrue(sets_vca.V_coefficient_vectors == [], "Should be identical.")
         self.assertTrue((sets_vca.Fs[0] == fd(cp.ones((X.shape[0], 1)) / cp.sqrt(X.shape[0]))).all(),
                         "Should be identical.")
-        self.assertTrue((sets_vca.F_gboefficient_vectors[0] == cp.array([[1]])).all(), "Should be identical.")
+        self.assertTrue((sets_vca.F_coefficient_vectors[0] == cp.array([[1]])).all(), "Should be identical.")
 
         border = sets_vca.construct_border()
         self.assertTrue((border == X).all(), "Should be identical.")
 
-        F_gboefficient_vectors = cp.array([[1, 0.5],
+        F_coefficient_vectors = cp.array([[1, 0.5],
                                           [0.1, 0.2]])
         F_evaluation_vectors = cp.array([[0.5, 2],
                                          [0.3, 1],
                                          [0.4, 1]])
-        sets_vca.update_F(F_gboefficient_vectors, F_evaluation_vectors)
+        sets_vca.update_F(F_coefficient_vectors, F_evaluation_vectors)
         self.assertTrue((sets_vca.Fs[1] == fd(F_evaluation_vectors)).all(), "Should be identical.")
-        self.assertTrue((sets_vca.F_gboefficient_vectors[1] == fd(F_gboefficient_vectors)).all(), "Should be identical.")
+        self.assertTrue((sets_vca.F_coefficient_vectors[1] == fd(F_coefficient_vectors)).all(), "Should be identical.")
 
-        V_gboefficient_vectors = cp.array([[0.5]])
+        V_coefficient_vectors = cp.array([[0.5]])
         V_evaluation_vectors = cp.array([[0.1],
                                          [0.1],
                                          [0.2]]).flatten()
-        sets_vca.update_V(V_gboefficient_vectors, V_evaluation_vectors)
+        sets_vca.update_V(V_coefficient_vectors, V_evaluation_vectors)
         self.assertTrue((sets_vca.Vs[0] == fd(V_evaluation_vectors)).all(), "Should be identical.")
-        self.assertTrue((sets_vca.V_gboefficient_vectors[0] == fd(V_gboefficient_vectors)).all(), "Should be identical.")
+        self.assertTrue((sets_vca.V_coefficient_vectors[0] == fd(V_coefficient_vectors)).all(), "Should be identical.")
 
         sets_vca.update_V(None, None)
         self.assertTrue(sets_vca.Vs[1] is None, "Should be None.")
-        self.assertTrue(sets_vca.V_gboefficient_vectors[1] is None, "Should be None.")
+        self.assertTrue(sets_vca.V_coefficient_vectors[1] is None, "Should be None.")
 
-        V_gboefficient_vectors = cp.array([[0.5],
+        V_coefficient_vectors = cp.array([[0.5],
                                           [0.2],
                                           [0]])
         V_evaluation_vectors = cp.array([[-0.3],
                                          [0.0],
                                          [0.2]]).flatten()
-        sets_vca.update_V(V_gboefficient_vectors, V_evaluation_vectors)
+        sets_vca.update_V(V_coefficient_vectors, V_evaluation_vectors)
         self.assertTrue((sets_vca.Vs[2] == fd(V_evaluation_vectors)).all(), "Should be identical.")
-        self.assertTrue((sets_vca.V_gboefficient_vectors[2] == fd(V_gboefficient_vectors)).all(), "Should be identical.")
+        self.assertTrue((sets_vca.V_coefficient_vectors[2] == fd(V_coefficient_vectors)).all(), "Should be identical.")
 
         C_evaluation_vectors = cp.array([[0.1],
                                          [0.2],
@@ -93,12 +93,12 @@ class TestSetsVCA(unittest.TestCase):
         sets_vca.update_C(C_evaluation_vectors)
         self.assertTrue((sets_vca.Cs[0] == fd(C_evaluation_vectors)).all(), "Should be identical.")
 
-        F_gboefficient_vectors = cp.array([[1],
+        F_coefficient_vectors = cp.array([[1],
                                           [-1]])
         F_evaluation_vectors = cp.array([[-0.5, 0.6],
                                          [0.3, 0.9],
                                          [0.4, 0.8]])
-        sets_vca.update_F(F_gboefficient_vectors, F_evaluation_vectors)
+        sets_vca.update_F(F_coefficient_vectors, F_evaluation_vectors)
 
         F_array = sets_vca.F_to_array()
         self.assertTrue((abs(F_array - cp.array([[0.57735027, 0.5, 2, -0.5, 0.6],

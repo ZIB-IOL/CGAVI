@@ -2,7 +2,7 @@ import unittest
 import cupy as cp
 import numpy as np
 from src.auxiliary_functions.auxiliary_functions import fd
-from src.feature_transformations.auxiliary_functions_avi import purge, update_gboefficient_vectors, \
+from src.feature_transformations.auxiliary_functions_avi import purge, update_coefficient_vectors, \
     streaming_matrix_updates
 
 
@@ -36,28 +36,28 @@ class TestPurge(unittest.TestCase):
 
 class TestUpdateCoefficientVectors(unittest.TestCase):
 
-    def test_update_gboefficient_vectors(self):
-        """Tests whether update_gboefficient_vectors() behaves as intended."""
-        G_gboefficient_vectors = cp.array([[1],
+    def test_update_coefficient_vectors(self):
+        """Tests whether update_coefficient_vectors() behaves as intended."""
+        G_coefficient_vectors = cp.array([[1],
                                           [2],
                                           [0]])
         vec = cp.array([[1],
                         [2]])
-        G_gboefficient_vectors = update_gboefficient_vectors(G_gboefficient_vectors, vec)
-        G_gboefficient_vectors = cp.vstack((fd(G_gboefficient_vectors),
-                                           cp.zeros((1, G_gboefficient_vectors.shape[1]))))
-        G_gboefficient_vectors = update_gboefficient_vectors(G_gboefficient_vectors, vec)
-        G_gboefficient_vectors = cp.vstack((fd(G_gboefficient_vectors),
-                                           cp.zeros((1, G_gboefficient_vectors.shape[1]))))
-        G_gboefficient_vectors = cp.vstack((fd(G_gboefficient_vectors),
-                                           cp.zeros((1, G_gboefficient_vectors.shape[1]))))
+        G_coefficient_vectors = update_coefficient_vectors(G_coefficient_vectors, vec)
+        G_coefficient_vectors = cp.vstack((fd(G_coefficient_vectors),
+                                           cp.zeros((1, G_coefficient_vectors.shape[1]))))
+        G_coefficient_vectors = update_coefficient_vectors(G_coefficient_vectors, vec)
+        G_coefficient_vectors = cp.vstack((fd(G_coefficient_vectors),
+                                           cp.zeros((1, G_coefficient_vectors.shape[1]))))
+        G_coefficient_vectors = cp.vstack((fd(G_coefficient_vectors),
+                                           cp.zeros((1, G_coefficient_vectors.shape[1]))))
         vec = cp.array([[1],
                         [2],
                         [3]])
 
-        G_gboefficient_vectors = update_gboefficient_vectors(G_gboefficient_vectors, vec)
+        G_coefficient_vectors = update_coefficient_vectors(G_coefficient_vectors, vec)
 
-        self.assertTrue((G_gboefficient_vectors == cp.array([[1., 1., 1., 1.],
+        self.assertTrue((G_coefficient_vectors == cp.array([[1., 1., 1., 1.],
                                                             [2., 0., 0., 0.],
                                                             [0., 2., 0., 0.],
                                                             [0., 0., 2., 0.],

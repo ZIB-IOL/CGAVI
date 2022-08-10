@@ -11,10 +11,10 @@ class AcceleratedGradientDescent:
         objective_function: instance of L2Loss
         psi: float, Optional
             (Default is 0.1.)
-        n_iter_no_gbhange: int, Optional
+        n_iter_no_change: int, Optional
             (Default is 20.)
         tol: float, Optional
-            If no improvement in loss over the last n_iter_no_gbhange iterations of at least psi * tol is made, terminate
+            If no improvement in loss over the last n_iter_no_change iterations of at least psi * tol is made, terminate
             the algorithm. (Default is 0.0001.)
         dimension: int, Optional
             The dimension of the optimization problem to be addressed. (Default is 10.)
@@ -38,7 +38,7 @@ class AcceleratedGradientDescent:
     def __init__(self,
                  objective_function,
                  psi: float = 0.1,
-                 n_iter_no_gbhange: int = 20,
+                 n_iter_no_change: int = 20,
                  tol: float = 0.0001,
                  dimension: int = 10,
                  max_iterations: int = 1000,
@@ -48,12 +48,12 @@ class AcceleratedGradientDescent:
         self.L = objective_function.L()
         self.alpha = objective_function.alpha()
         self.Q = None
-        self.str_gbvx_smth_gbst = None
+        self.str_cvx_smth_cst = None
         if self.alpha > 0:
             self.Q = float(self.L / self.alpha)
-            self.str_gbvx_smth_gbst = float((cp.sqrt(self.Q) - 1) / (cp.sqrt(self.Q) + 1))
+            self.str_cvx_smth_cst = float((cp.sqrt(self.Q) - 1) / (cp.sqrt(self.Q) + 1))
         self.psi = psi
-        self.n_iter_no_gbhange = n_iter_no_gbhange
+        self.n_iter_no_change = n_iter_no_change
         self.tol = tol
         self.dimension = dimension
         self.max_iterations = max_iterations
@@ -76,13 +76,13 @@ class AcceleratedGradientDescent:
         y = x.copy()
         z = x.copy()
         loss_list = []
-        iter_no_gbhange = 0
+        iter_no_change = 0
         for epoch in range(1, self.max_iterations + 1):
             grad = self.objective.evaluate_gradient(x).flatten()
             if self.alpha > 0:
                 y_old = y
                 y = x - 1 / self.L * grad
-                x = (1 + self.str_gbvx_smth_gbst) * y - self.str_gbvx_smth_gbst * y_old
+                x = (1 + self.str_cvx_smth_cst) * y - self.str_cvx_smth_cst * y_old
             else:
                 y = x - 1 / self.L * grad
                 z = z - (epoch + 1) / (2 * self.L) * grad
@@ -96,13 +96,13 @@ class AcceleratedGradientDescent:
                 # print("psi")
                 break
             if epoch > 1 and (loss + self.psi * self.tol > loss_list[-1]):
-                iter_no_gbhange += 1
-                if iter_no_gbhange == self.n_iter_no_gbhange:
+                iter_no_change += 1
+                if iter_no_change == self.n_iter_no_change:
                     # print("not enough decrease")
                     break
 
             else:
-                iter_no_gbhange = 0
+                iter_no_change = 0
             loss_list.append(loss)
         loss_list.append(self.objective.evaluate_function(y))
         return y, loss_list, None

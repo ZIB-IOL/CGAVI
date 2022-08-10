@@ -54,13 +54,13 @@ class VCA:
                 break
             self.sets_vca.update_C(border)
 
-            V_gboefficients, V_evaluations, F_gboefficients, F_evaluations = find_range_null_vca(
+            V_coefficients, V_evaluations, F_coefficients, F_evaluations = find_range_null_vca(
                 cp.hstack(self.sets_vca.Fs), self.sets_vca.Cs[-1], psi=self.psi)
-            self.sets_vca.update_V(V_gboefficients, V_evaluations)
-            if isinstance(F_gboefficients, list):
+            self.sets_vca.update_V(V_coefficients, V_evaluations)
+            if isinstance(F_coefficients, list):
                 break
-            elif isinstance(F_gboefficients, cp.ndarray):
-                self.sets_vca.update_F(F_gboefficients, F_evaluations)
+            elif isinstance(F_coefficients, cp.ndarray):
+                self.sets_vca.update_F(F_coefficients, F_evaluations)
 
             self.degree += 1
 

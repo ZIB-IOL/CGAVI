@@ -10,8 +10,8 @@ from global_ import n_seed_, n_runs_, cvs_
 from src.auxiliary_functions.auxiliary_functions import fd, translate_names
 from src.data_frames.data_frames import save_data_frame
 from src.data_sets.data_set_creation import fetch_data_set
-from src.data_sets.preprocessing import train_test_split, min_max_feature_scaling, split_into_gblasses, \
-    unison_shuffled_gbopies
+from src.data_sets.preprocessing import train_test_split, min_max_feature_scaling, split_into_classes, \
+    unison_shuffled_copies
 from src.feature_transformations.avi import AVI
 from src.feature_transformations.oracle_avi import OracleAVI
 from src.feature_transformations.vca import VCA
@@ -29,7 +29,7 @@ class ExperimentSetups:
     Methods:
         fetch_and_prepare_data()
             Downloads and prepares the data.
-        get_gbhunks(X_train_gbhunks: np.ndarray, y_train_gbhunks: np.ndarray, idx: int)
+        get_chunks(X_train_chunks: np.ndarray, y_train_chunks: np.ndarray, idx: int)
             Turns the idx chunk into the validation set and the other chunks into the train set.
         hyperparameter_tuning()
             Tunes the hyperparameters.
@@ -37,16 +37,16 @@ class ExperimentSetups:
             Performs the final retraining with the best hyperparameters.
         cross_validation(saving: bool)
             Performs cross validation.
-        hyperparameter_gbombinations_avi()
+        hyperparameter_combinations_avi()
             Tests all hyperparameter combinations for AVI and linear kernel SVM and returns a data frame containing the
             results.
-        hyperparameter_gbombinations_oavi()
+        hyperparameter_combinations_oavi()
             Tests all hyperparameter combinations for OAVI and linear kernel SVM and returns a data frame
             containing the results.
-        hyperparameter_gbombinations_svm()
+        hyperparameter_combinations_svm()
             Tests all hyperparameter combinations for polynomial kernel SVM and returns a data frame containing the
             results.
-        hyperparameter_gbombinations_vca()
+        hyperparameter_combinations_vca()
             Tests all hyperparameter combinations for VCA and linear kernel SVM and returns a data frame containing the
             results.
         final_training_avi(data_frame: pd.DataFrame, count_svm: bool)
@@ -71,12 +71,12 @@ class ExperimentSetups:
         """Downloads and prepares the data."""
         return fetch_and_prepare_data(self.data_set_name)
 
-    def get_gbhunks(self, X_train_gbhunks: np.ndarray, y_train_gbhunks: np.ndarray, idx: int):
+    def get_chunks(self, X_train_chunks: np.ndarray, y_train_chunks: np.ndarray, idx: int):
         """Turns the idx chunk into the validation set and the other chunks into the train set.
 
         Args:
-            X_train_gbhunks: np.ndarray
-            y_train_gbhunks: np.ndarray
+            X_train_chunks: np.ndarray
+            y_train_chunks: np.ndarray
             idx: int
 
         Returns:
@@ -90,16 +90,16 @@ class ExperimentSetups:
                 Validation labels.
         """
         if idx == 0:
-            X_t = np.vstack((X_train_gbhunks[1:]))
-            y_t = np.vstack((y_train_gbhunks[1:]))
-        elif idx == len(X_train_gbhunks) - 1:
-            X_t = np.vstack((X_train_gbhunks[:len(X_train_gbhunks) - 1]))
-            y_t = np.vstack((y_train_gbhunks[:len(X_train_gbhunks) - 1]))
+            X_t = np.vstack((X_train_chunks[1:]))
+            y_t = np.vstack((y_train_chunks[1:]))
+        elif idx == len(X_train_chunks) - 1:
+            X_t = np.vstack((X_train_chunks[:len(X_train_chunks) - 1]))
+            y_t = np.vstack((y_train_chunks[:len(X_train_chunks) - 1]))
         else:
-            X_t = np.vstack((X_train_gbhunks[:idx]))
-            y_t = np.vstack((y_train_gbhunks[:idx]))
-        X_v = X_train_gbhunks[idx]
-        y_v = y_train_gbhunks[idx]
+            X_t = np.vstack((X_train_chunks[:idx]))
+            y_t = np.vstack((y_train_chunks[:idx]))
+        X_v = X_train_chunks[idx]
+        y_v = y_train_chunks[idx]
         return fd(X_t), fd(y_t), fd(X_v), fd(y_v)
 
     def hyperparamter_tuning(self):
@@ -107,13 +107,13 @@ class ExperimentSetups:
         df = None
         timer = time.time()
         if self.algorithm_name == "avi":
-            df = self.hyperparameter_gbombinations_avi()
+            df = self.hyperparameter_combinations_avi()
         elif self.algorithm_name == "oavi":
-            df = self.hyperparameter_gbombinations_oavi()
+            df = self.hyperparameter_combinations_oavi()
         elif self.algorithm_name == "svm":
-            df = self.hyperparameter_gbombinations_svm()
+            df = self.hyperparameter_combinations_svm()
         elif self.algorithm_name == "vca":
-            df = self.hyperparameter_gbombinations_vca()
+            df = self.hyperparameter_combinations_vca()
         timer = time.time() - timer
 
         return df, timer
@@ -162,7 +162,7 @@ class ExperimentSetups:
 
         return df_test
 
-    def hyperparameter_gbombinations_avi(self):
+    def hyperparameter_combinations_avi(self):
         """Tests all hyperparameter combinations for AVI and linear kernel SVM and returns a data frame containing the
         results.
 
@@ -184,10 +184,10 @@ class ExperimentSetups:
                 for C in Cs:
                     (time_t_avg, time_v_avg, acc_t_avg, acc_v_avg, sparsity_avg, tot_sparsity_avg, n_poly_avg,
                      n_zeros_avg, n_entries_avg, n_terms_avg, degree_avg) = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                    X_train_gbhunks = np.array_split(self.X_train, self.cv)
-                    y_train_gbhunks = np.array_split(self.y_train, self.cv)
-                    for idx in range(0, len(X_train_gbhunks)):
-                        X_t, y_t, X_v, y_v = self.get_gbhunks(X_train_gbhunks, y_train_gbhunks, idx=idx)
+                    X_train_chunks = np.array_split(self.X_train, self.cv)
+                    y_train_chunks = np.array_split(self.y_train, self.cv)
+                    for idx in range(0, len(X_train_chunks)):
+                        X_t, y_t, X_v, y_v = self.get_chunks(X_train_chunks, y_train_chunks, idx=idx)
                         avi = AVI(psi=psi, tau=tau, term_ordering_strategy=term_ordering_strategy,
                                   border_type=border_type)
                         (time_t, time_v, acc_t, acc_v, sparsity, tot_sparsity, n_poly, n_zeros, n_entries, n_terms,
@@ -212,7 +212,7 @@ class ExperimentSetups:
                     df = df.append(row, ignore_index=True)
         return df
 
-    def hyperparameter_gbombinations_oavi(self):
+    def hyperparameter_combinations_oavi(self):
         """Tests all hyperparameter combinations for OAVI and linear kernel SVM and returns a data frame
         containing the results.
 
@@ -235,10 +235,10 @@ class ExperimentSetups:
                 (time_t_avg, time_v_avg, acc_t_avg, acc_v_avg, sparsity_avg, tot_sparsity_avg, n_poly_avg,
                  n_zeros_avg, n_entries_avg, n_terms_avg, degree_avg) = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-                X_train_gbhunks = np.array_split(self.X_train, self.cv)
-                y_train_gbhunks = np.array_split(self.y_train, self.cv)
-                for idx in range(0, len(X_train_gbhunks)):
-                    X_t, y_t, X_v, y_v = self.get_gbhunks(X_train_gbhunks, y_train_gbhunks, idx=idx)
+                X_train_chunks = np.array_split(self.X_train, self.cv)
+                y_train_chunks = np.array_split(self.y_train, self.cv)
+                for idx in range(0, len(X_train_chunks)):
+                    X_t, y_t, X_v, y_v = self.get_chunks(X_train_chunks, y_train_chunks, idx=idx)
                     oracle_avi = OracleAVI(psi=psi, oracle_type=oracle_type,
                                            term_ordering_strategy=term_ordering_strategy, border_type=border_type,
                                            inverse_hessian_boost=inverse_hessian_boost)
@@ -265,7 +265,7 @@ class ExperimentSetups:
 
         return df
 
-    def hyperparameter_gbombinations_svm(self):
+    def hyperparameter_combinations_svm(self):
         """Tests all hyperparameter combinations for polynomial kernel SVM and returns a data frame containing the
         results.
 
@@ -281,10 +281,10 @@ class ExperimentSetups:
         for C in Cs:
             for degree in degrees:
                 time_t_avg, time_v_avg, acc_t_avg, acc_v_avg = 0, 0, 0, 0
-                X_train_gbhunks = np.array_split(self.X_train, self.cv)
-                y_train_gbhunks = np.array_split(self.y_train, self.cv)
-                for idx in range(0, len(X_train_gbhunks)):
-                    X_t, y_t, X_v, y_v = self.get_gbhunks(X_train_gbhunks, y_train_gbhunks, idx=idx)
+                X_train_chunks = np.array_split(self.X_train, self.cv)
+                y_train_chunks = np.array_split(self.y_train, self.cv)
+                for idx in range(0, len(X_train_chunks)):
+                    X_t, y_t, X_v, y_v = self.get_chunks(X_train_chunks, y_train_chunks, idx=idx)
 
                     classifier = svm.SVC(kernel='poly', C=C, degree=degree, max_iter=10000, cache_size=6000)
 
@@ -305,7 +305,7 @@ class ExperimentSetups:
 
         return df
 
-    def hyperparameter_gbombinations_vca(self):
+    def hyperparameter_combinations_vca(self):
         """Tests all hyperparameter combinations for VCA and linear kernel SVM and returns a data frame containing the
         results.
 
@@ -323,10 +323,10 @@ class ExperimentSetups:
             for C in Cs:
                 (time_t_avg, time_v_avg, acc_t_avg, acc_v_avg, sparsity_avg, tot_sparsity_avg, n_poly_avg, n_zeros_avg,
                  n_entries_avg, n_terms_avg, degree_avg) = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-                X_train_gbhunks = np.array_split(self.X_train, self.cv)
-                y_train_gbhunks = np.array_split(self.y_train, self.cv)
-                for idx in range(0, len(X_train_gbhunks)):
-                    X_t, y_t, X_v, y_v = self.get_gbhunks(X_train_gbhunks, y_train_gbhunks, idx=idx)
+                X_train_chunks = np.array_split(self.X_train, self.cv)
+                y_train_chunks = np.array_split(self.y_train, self.cv)
+                for idx in range(0, len(X_train_chunks)):
+                    X_t, y_t, X_v, y_v = self.get_chunks(X_train_chunks, y_train_chunks, idx=idx)
                     vca = VCA(psi=psi)
                     (time_t, time_v, acc_t, acc_v, sparsity, tot_sparsity, n_poly, n_zeros, n_entries, n_terms, degree
                      ) = feature_transformation_for_linear_svm(vca, C, fd(X_t), fd(y_t), fd(X_v), fd(y_v))
@@ -447,7 +447,7 @@ class ExperimentSetups:
 def fetch_and_prepare_data(name, proportion: float = 0.6):
     """Downloads and prepares the data."""
     X, y = fetch_data_set(name=name)
-    X, y = unison_shuffled_gbopies(X, y)
+    X, y = unison_shuffled_copies(X, y)
     X_train, y_train, X_test, y_test = train_test_split(X, y, proportion=proportion)
     X_train, X_test = min_max_feature_scaling(X_train, X_test)
     return fd(X_train), fd(y_train), fd(X_test), fd(y_test)
@@ -502,15 +502,15 @@ def feature_transformation_for_linear_svm(feature_transformation, C: float, X_tr
     number_of_terms = 0
     degree = 0
 
-    X_train_gblasses = split_into_gblasses(fd(X_train), fd(y_train))
+    X_train_classes = split_into_classes(fd(X_train), fd(y_train))
 
     polynomials_train = []
     polynomials_test = []
 
-    for X_train_gblass in X_train_gblasses:
+    for X_train_class in X_train_classes:
         # Train
         timer = time.time()
-        feature_transformation.fit(cp.array(X_train_gblass))
+        feature_transformation.fit(cp.array(X_train_class))
         X_train_polynomial_evaluations, _ = feature_transformation.evaluate(cp.array(X_train))
         polynomials_train.append(X_train_polynomial_evaluations)
         train_time += time.time() - timer

@@ -93,12 +93,12 @@ class AVI:
             O_evaluations = fd(self.sets_avi.O_array_evaluations)
 
             border_terms, border_evaluations = self.sets_avi.construct_border()
-            (G_gboefficient_vectors, new_leading_terms, new_O_terms, new_O_evaluations, new_O_indices
+            (G_coefficient_vectors, new_leading_terms, new_O_terms, new_O_evaluations, new_O_indices
              ) = find_range_null_avi(O_terms, O_evaluations, border_terms, border_evaluations,
                                      psi=self.psi, tau=self.tau)
 
             self.sets_avi.update_leading_terms(new_leading_terms)
-            self.sets_avi.update_G(G_gboefficient_vectors)
+            self.sets_avi.update_G(G_coefficient_vectors)
             if not new_O_indices:
                 break
 

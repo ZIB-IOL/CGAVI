@@ -3,7 +3,7 @@ import numpy as np
 from global_ import n_seed_
 from src.auxiliary_functions.auxiliary_functions import fd
 from src.data_sets.data_set_creation import fetch_data_set
-from src.data_sets.preprocessing import unison_shuffled_gbopies, train_test_split, min_max_feature_scaling
+from src.data_sets.preprocessing import unison_shuffled_copies, train_test_split, min_max_feature_scaling
 from src.feature_transformations.avi import AVI
 import cupy as cp
 
@@ -20,7 +20,7 @@ class TestAVI(unittest.TestCase):
         for border_type in ["gb", "bb"]:
             for tos in ["deglex", "pearson", "rev pearson"]:
                 X, y = fetch_data_set(name='bank')
-                X, y = unison_shuffled_gbopies(X, y)
+                X, y = unison_shuffled_copies(X, y)
                 X_train, y_train, X_test, y_test = train_test_split(X, y)
 
                 X_train, X_test = min_max_feature_scaling(X_train, X_test)

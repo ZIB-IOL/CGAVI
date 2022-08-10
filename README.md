@@ -49,7 +49,7 @@ Execute the experiments:
 This will create folders named data_frames and plots, which contain subfolders containing the experiment results and 
 the plots, respectively. 
 
-The performance experiments can be displayed as latex_gbode by executing:
+The performance experiments can be displayed as latex_code by executing:
 ```python3 script
 >>> experiments_to_latex_cgavi.py
 ```

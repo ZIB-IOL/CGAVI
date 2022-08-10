@@ -2,7 +2,7 @@ import cupy as cp
 from src.auxiliary_functions.auxiliary_functions import orthogonal_projection, fd
 from src.auxiliary_functions.indices import find_first_non_zero_entries, find_last_non_zero_entries
 from src.auxiliary_functions.sorting import sort_by_pivot, row_sort
-from src.feature_transformations.auxiliary_functions_avi import update_gboefficient_vectors
+from src.feature_transformations.auxiliary_functions_avi import update_coefficient_vectors
 
 
 def find_range_null_avi(O_terms: cp.ndarray, O_evaluations: cp.ndarray, border_terms: cp.ndarray,
@@ -52,7 +52,7 @@ def find_range_null_avi(O_terms: cp.ndarray, O_evaluations: cp.ndarray, border_t
         else:
             for i in range(0, C.shape[0]):
                 coefficient_vector = fd(C.T[:, i])
-                coefficient_vectors_new = update_gboefficient_vectors(fd(coefficient_vectors), fd(coefficient_vector),
+                coefficient_vectors_new = update_coefficient_vectors(fd(coefficient_vectors), fd(coefficient_vector),
                                                                      first=True)
                 if coefficient_vectors_new.shape == coefficient_vectors.shape:
                     end_degree = True
@@ -205,30 +205,30 @@ def qr_decomposition(matrix: cp.ndarray, tau: float = 0.1):
         Q = 1 / norm * a
     for i in range(1, n):
         if Q is None:
-            num_gbols = 0
+            num_cols = 0
         else:
-            num_gbols = Q.shape[1]
+            num_cols = Q.shape[1]
         a = matrix[:, i][:, cp.newaxis]
         q = a
         r = fd(cp.zeros((mn, 1)))
-        if num_gbols < m:
-            if num_gbols > 0:
-                q = q - fd(Q[:, :num_gbols]).dot((a.T.dot(fd(Q[:, :num_gbols]))).T)
-                r[:num_gbols, :] = fd(Q[:, :num_gbols]).T.dot(a)
+        if num_cols < m:
+            if num_cols > 0:
+                q = q - fd(Q[:, :num_cols]).dot((a.T.dot(fd(Q[:, :num_cols]))).T)
+                r[:num_cols, :] = fd(Q[:, :num_cols]).T.dot(a)
             norm = cp.linalg.norm(q)
             if norm < tau:
-                if n - i < m - num_gbols:
+                if n - i < m - num_cols:
                     q = fd(cp.zeros((m, 1)))
             else:
-                r[num_gbols, 0] = 1
+                r[num_cols, 0] = 1
                 r = r * norm
                 q = q / norm
             if Q is None:
                 Q = q
             else:
                 Q = cp.hstack((Q, q))
-        elif num_gbols >= m:
-            r[:m, :] = fd(Q[:, :num_gbols]).T.dot(a)
+        elif num_cols >= m:
+            r[:m, :] = fd(Q[:, :num_cols]).T.dot(a)
         R = cp.hstack((R, r))
     return Q, R
 
@@ -277,11 +277,11 @@ def find_range_null_vca(F: cp.ndarray, C: cp.ndarray, psi: float):
         psi: float
 
     Returns:
-        V_gboefficient_vectors: cp.ndarray
+        V_coefficient_vectors: cp.ndarray
             Coefficient vectors of the polynomials we append to V.
         V_evaluation_vectors: cp.ndarray
             Evaluation vectors of the polynomials we append to V.
-        F_gboefficient_vectors: cp.ndarray
+        F_coefficient_vectors: cp.ndarray
             Coefficient vectors of the polynomials we append to F.
         F_evaluation_vectors: cp.ndarray
             Evaluation vectors of the polynomials we append to F.
@@ -292,22 +292,22 @@ def find_range_null_vca(F: cp.ndarray, C: cp.ndarray, psi: float):
     """
     F = fd(F)
     C = fd(C)
-    tmp_gboefficient_vectors = []
+    tmp_coefficient_vectors = []
     tmp_evaluation_vectors = []
     for i in range(0, C.shape[1]):
-        tmp_gboefficient_vector = fd(cp.zeros(C.shape[1])).T
-        tmp_gboefficient_vector[:, i] = 1
+        tmp_coefficient_vector = fd(cp.zeros(C.shape[1])).T
+        tmp_coefficient_vector[:, i] = 1
         tmp_evaluation_vector = fd(C[:, i])
-        orthogonal_gbomponents = orthogonal_projection(F, tmp_evaluation_vector)
-        tmp_gboefficient_vector = fd(cp.hstack((-orthogonal_gbomponents.T, tmp_gboefficient_vector))).T
+        orthogonal_components = orthogonal_projection(F, tmp_evaluation_vector)
+        tmp_coefficient_vector = fd(cp.hstack((-orthogonal_components.T, tmp_coefficient_vector))).T
 
-        tmp_evaluation_vector = tmp_evaluation_vector - fd(F.dot(orthogonal_gbomponents))
+        tmp_evaluation_vector = tmp_evaluation_vector - fd(F.dot(orthogonal_components))
         assert (abs(
-            fd(cp.hstack((F, C))).dot(tmp_gboefficient_vector) - tmp_evaluation_vector) <= 10e-10).all(), "sanity check"
-        tmp_gboefficient_vectors.append(tmp_gboefficient_vector)
+            fd(cp.hstack((F, C))).dot(tmp_coefficient_vector) - tmp_evaluation_vector) <= 10e-10).all(), "sanity check"
+        tmp_coefficient_vectors.append(tmp_coefficient_vector)
         tmp_evaluation_vectors.append(tmp_evaluation_vector)
 
-    tmp_gboefficient_vectors = fd(cp.hstack(tmp_gboefficient_vectors))
+    tmp_coefficient_vectors = fd(cp.hstack(tmp_coefficient_vectors))
     tmp_evaluation_vectors = fd(cp.hstack(tmp_evaluation_vectors))
     A = tmp_evaluation_vectors
     if A.shape[0] > A.shape[1]:
@@ -317,30 +317,30 @@ def find_range_null_vca(F: cp.ndarray, C: cp.ndarray, psi: float):
         L, D, U = cp.linalg.svd(A, full_matrices=True)
 
     U = fd(U)
-    V_gboefficient_vectors = []
+    V_coefficient_vectors = []
     V_evaluation_vectors = []
-    F_gboefficient_vectors = []
+    F_coefficient_vectors = []
     F_evaluation_vectors = []
     for i in range(0, C.shape[1]):
         row_U = fd(U[i, :]).T
-        coefficient_vector = fd(tmp_gboefficient_vectors.dot(row_U.T))
+        coefficient_vector = fd(tmp_coefficient_vectors.dot(row_U.T))
         evaluation_vector = fd(A.dot(row_U.T))
 
         loss = (1 / A.shape[0]) * cp.linalg.norm(evaluation_vector) ** 2
 
         if loss > psi:
             norm = cp.linalg.norm(evaluation_vector)
-            F_gboefficient_vectors.append(coefficient_vector / norm)
+            F_coefficient_vectors.append(coefficient_vector / norm)
             F_evaluation_vectors.append(evaluation_vector / norm)
         else:
-            V_gboefficient_vectors.append(coefficient_vector)
+            V_coefficient_vectors.append(coefficient_vector)
             V_evaluation_vectors.append(evaluation_vector)
 
-    if len(V_gboefficient_vectors) > 0:
-        V_gboefficient_vectors = fd(cp.hstack(V_gboefficient_vectors))
+    if len(V_coefficient_vectors) > 0:
+        V_coefficient_vectors = fd(cp.hstack(V_coefficient_vectors))
         V_evaluation_vectors = fd(cp.hstack(V_evaluation_vectors))
-    if len(F_gboefficient_vectors) > 0:
-        F_gboefficient_vectors = fd(cp.hstack(F_gboefficient_vectors))
+    if len(F_coefficient_vectors) > 0:
+        F_coefficient_vectors = fd(cp.hstack(F_coefficient_vectors))
         F_evaluation_vectors = fd(cp.hstack(F_evaluation_vectors))
 
-    return V_gboefficient_vectors, V_evaluation_vectors, F_gboefficient_vectors, F_evaluation_vectors
+    return V_coefficient_vectors, V_evaluation_vectors, F_coefficient_vectors, F_evaluation_vectors

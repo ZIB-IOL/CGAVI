@@ -31,7 +31,7 @@ def fetch_data_set(name: str):
     if name == 'bank':
         X, y = download_bank()
     elif name == 'credit':
-        X, y = download_gbredit()
+        X, y = download_credit()
     elif name == 'digits':
         X, y = download_digits()
     elif name == 'htru':
@@ -84,7 +84,7 @@ def download_bank():
     return X, y
 
 
-def download_gbredit():
+def download_credit():
     """Downloads the default of 'credit' card data set, a data set of 30000 samples with 22 features. Aim: determine
     whether customers are going to default.
 
@@ -311,15 +311,15 @@ def download_spam():
     return X, y
 
 
-def create_synthetic_data(samples_per_gblass: int = 1000000, noise: float = 0.05):
-    """Creates a 'synthetic' data set of samples_per_gblass samples per class with Gaussian noise.
+def create_synthetic_data(samples_per_class: int = 1000000, noise: float = 0.05):
+    """Creates a 'synthetic' data set of samples_per_class samples per class with Gaussian noise.
 
     Creates a synthetic data set consisting of two classes:
         Samples of class 1 satisfy x_1^2 + 0.01 * x_2 + x_3**2 - 1 = 0.
         Samples of class 2 satisfy x_1^2 + x_3^2 - 1.3 = 0.
 
     Args:
-        samples_per_gblass: int, Optional
+        samples_per_class: int, Optional
             (Default is 1000000.)
         noise: int, Optional
             (Default is 0.05.)
@@ -329,20 +329,20 @@ def create_synthetic_data(samples_per_gblass: int = 1000000, noise: float = 0.05
         y: np.ndarray
     """
     # class 1
-    x_1 = np.random.random((samples_per_gblass, 1)) * 0.99
-    x_2 = np.random.random((samples_per_gblass, 1))
-    x_3 = np.sqrt(np.ones((samples_per_gblass, 1)) - x_1 ** 2 - 0.01 * x_2)
+    x_1 = np.random.random((samples_per_class, 1)) * 0.99
+    x_2 = np.random.random((samples_per_class, 1))
+    x_3 = np.sqrt(np.ones((samples_per_class, 1)) - x_1 ** 2 - 0.01 * x_2)
 
     X_1 = np.hstack((x_1, x_2, x_3))
-    y_1 = fd(np.zeros((samples_per_gblass, 1)))
+    y_1 = fd(np.zeros((samples_per_class, 1)))
 
     # class 2
-    x_1 = np.random.random((samples_per_gblass, 1))
-    x_2 = np.random.random((samples_per_gblass, 1))
-    x_3 = np.sqrt(1.3 * np.ones((samples_per_gblass, 1)) - x_1 ** 2)
+    x_1 = np.random.random((samples_per_class, 1))
+    x_2 = np.random.random((samples_per_class, 1))
+    x_3 = np.sqrt(1.3 * np.ones((samples_per_class, 1)) - x_1 ** 2)
 
     X_2 = np.hstack((x_1, x_2, x_3))
-    y_2 = fd(np.ones((samples_per_gblass, 1)))
+    y_2 = fd(np.ones((samples_per_class, 1)))
 
     X = np.vstack((X_1, X_2))
     y = np.vstack((y_1, y_2))

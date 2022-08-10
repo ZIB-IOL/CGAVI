@@ -160,8 +160,8 @@ class TestL2Loss(unittest.TestCase):
         labels = cp.random.random((5, 1))
         loss = L2Loss(data=data_matrix, labels=labels, lmbda=1)
         L = loss.L()
-        L_gbomputed = 2 / data_matrix.shape[0] * cp.max(cp.linalg.eigh(data_matrix.T.dot(data_matrix))[0]) + 1
-        self.assertTrue(abs(float(L - L_gbomputed)) <= 1e-10, "L is wrong.")
+        L_computed = 2 / data_matrix.shape[0] * cp.max(cp.linalg.eigh(data_matrix.T.dot(data_matrix))[0]) + 1
+        self.assertTrue(abs(float(L - L_computed)) <= 1e-10, "L is wrong.")
 
     def test_evaluate_step_size(self):
         """Tests whether L2Loss.evaluate_step_size() behaves as intended."""
