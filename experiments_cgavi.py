@@ -34,9 +34,8 @@ def performance():
     hp_avi_bb = {'algorithm': 'avi', 'C': Cs_single_, 'psi': psis_, 'tau': taus_, 'term_ordering_strategy': tos_,
                  'border_type': "bb"}
 
-    hps_gb = [hp_pcg_gb, hp_agd_gb, hp_abm_gb, hp_vca, hp_svm, hp_bpcg_gb, hp_avi_gb]
-    # hps_gb = [hp_bpcg_gb,  hp_avi_gb]
-    hps_bb = [hp_pcg_bb, hp_agd_bb, hp_abm_bb, hp_bpcg_bb, hp_avi_bb]
+    hps_gb = [hp_pcg_gb, hp_agd_gb, hp_abm_gb, hp_vca, hp_svm]
+    hps_bb = [hp_pcg_bb, hp_agd_bb, hp_abm_bb]
     for hp in hps_gb:
         perform_experiments(data_sets_performance_gb_, hp, saving=True)
     for hp in hps_bb:
