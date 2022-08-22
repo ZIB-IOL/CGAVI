@@ -58,7 +58,7 @@ def border_type():
 
 if __name__ == '__main__':
     # performance()
-    # border_type()
+    border_type()
 
     hp_agd_gb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': tos_,
                  'border_type': "gb", 'inverse_hessian_boost': 'false'}

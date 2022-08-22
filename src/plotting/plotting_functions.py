@@ -51,6 +51,8 @@ def plotter(title: str, mean_data: list, x_data: np.ndarray, legend: list, data_
 
         if not two_versions:
             plt.plot(samples, mean, color=colors_[i], marker=markers_[i], linewidth=linewidth_, markersize=markersize_)
+            if std_data is not None:
+                plt.fill_between(samples, mean - std, mean + std, alpha=alpha, color=colors_[i])
         elif two_versions:
             if i % 2 == 0:
                 plt.plot(samples, mean, color=colors_[int(np.floor(i / 2))], marker=markers_[int(np.floor(i / 2))],
@@ -58,8 +60,8 @@ def plotter(title: str, mean_data: list, x_data: np.ndarray, legend: list, data_
             else:
                 plt.plot(samples, mean, color=colors_[int(np.floor(i / 2))], marker=markers_[int(np.floor(i / 2))],
                          linestyle="dotted", linewidth=linewidth_, markersize=markersize_)
-        if std_data is not None:
-            plt.fill_between(samples, mean - std, mean + std, alpha=alpha, color=colors_[i])
+            if std_data is not None:
+                plt.fill_between(samples, mean - std, mean + std, alpha=alpha, color=colors_[int(np.floor(i / 2))])
 
     if legend is not None:
         plt.legend(legend, fontsize=font_size_legend_, loc="upper left")
