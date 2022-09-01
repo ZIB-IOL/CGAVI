@@ -44,9 +44,9 @@ def performance():
 
 def border_type():
     hp_pcg_gb = {'algorithm': 'oavi', 'oracle_type': 'PCG', 'C': Cs_single_, 'term_ordering_strategy': tos_,
-                 'border_type': "gb", 'inverse_hessian_boost': 'weak'}
+                 'border_type': "gb", 'inverse_hessian_boost': 'false'}
     hp_pcg_bb = {'algorithm': 'oavi', 'oracle_type': 'PCG', 'C': Cs_single_, 'term_ordering_strategy': tos_,
-                 'border_type': "bb", 'inverse_hessian_boost': 'weak'}
+                 'border_type': "bb", 'inverse_hessian_boost': 'false'}
     hp_abm_gb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'C': Cs_single_, 'term_ordering_strategy': tos_,
                  'border_type': "gb", 'inverse_hessian_boost': 'false'}
     hp_abm_bb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'C': Cs_single_, 'term_ordering_strategy': tos_,
@@ -59,37 +59,3 @@ def border_type():
 if __name__ == '__main__':
     # performance()
     border_type()
-
-    hp_agd_gb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': tos_,
-                 'border_type': "gb", 'inverse_hessian_boost': 'false'}
-    hp_agd_bb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'psi': psis_, 'C': Cs_, 'term_ordering_strategy': tos_,
-                 'border_type': "bb", 'inverse_hessian_boost': 'false'}
-
-    hp_pcg_gb = {'algorithm': 'oavi', 'oracle_type': 'PCG', 'psi': psis_, 'C': Cs_single_,
-                 'term_ordering_strategy': tos_, 'border_type': "gb", 'inverse_hessian_boost': 'false'}
-    hp_pcg_bb = {'algorithm': 'oavi', 'oracle_type': 'PCG', 'psi': psis_, 'C': Cs_single_,
-                 'term_ordering_strategy': tos_, 'border_type': "bb", 'inverse_hessian_boost': 'false'}
-
-    hp_abm_gb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'psi': psis_,
-                 'C': Cs_single_, 'term_ordering_strategy': tos_, 'border_type': "gb",
-                 'inverse_hessian_boost': 'false'}
-    hp_abm_bb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'psi': psis_, 'C': Cs_single_,
-                 'term_ordering_strategy': tos_, 'border_type': "bb", 'inverse_hessian_boost': 'false'}
-
-    hp_vca = {'algorithm': 'vca', 'psi': psis_, 'C': Cs_}
-    hp_svm = {'algorithm': 'svm', 'C': Cs_, 'avg_degree': degrees_}
-
-    hp_bpcg_gb = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'psi': psis_, 'C': Cs_single_,
-                  'term_ordering_strategy': tos_, 'border_type': "gb", 'inverse_hessian_boost': 'false'}
-    hp_bpcg_bb = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'psi': psis_, 'C': Cs_single_,
-                  'term_ordering_strategy': tos_, 'border_type': "bb", 'inverse_hessian_boost': 'false'}
-
-    hp_avi_gb = {'algorithm': 'avi', 'C': Cs_single_, 'psi': psis_, 'tau': taus_, 'term_ordering_strategy': tos_,
-                 'border_type': "gb"}
-    hp_avi_bb = {'algorithm': 'avi', 'C': Cs_single_, 'psi': psis_, 'tau': taus_, 'term_ordering_strategy': tos_,
-                 'border_type': "bb"}
-
-    hps_gb = [hp_pcg_gb, hp_agd_gb, hp_abm_gb, hp_vca, hp_svm]
-    hps_bb = [hp_pcg_bb, hp_agd_bb, hp_abm_bb]
-    for hp in hps_bb:
-        perform_experiments(["spam"], hp, saving=True)
