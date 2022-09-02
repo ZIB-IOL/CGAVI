@@ -1,7 +1,19 @@
+import math
+
 from src.auxiliary_functions.auxiliary_functions import translate_names
 from src.data_frames.data_frames import load_data_frame
 import pandas as pd
 import numpy as np
+
+
+def latex_float(f):
+    # float_str = "{0: .2g}".format(f)
+    float_str = f
+    if "e" in float_str:
+        base, exponent = float_str.split("e")
+        return r"${0} \times 10^{{{1}}}$".format(base, int(exponent))
+    else:
+        return float_str
 
 
 def get_from_key(algorithm_name, data_set_name, key: str):
@@ -22,18 +34,27 @@ def get_from_key(algorithm_name, data_set_name, key: str):
         elif key == "error_test":
             value = (1 - df_tmp["accuracy_test"]) * 100
         else:
-            value = float(df_tmp[key])
+            if key in ["degree", "avg_degree"]:
+                try:
+                    value = float(df_tmp["degree"])
+                except:
+                    value = float(df_tmp["avg_degree"])
+            else:
+                value = float(df_tmp[key])
         list_of_values.append(value)
 
     array_of_values = np.array(list_of_values)
     mean = float(np.mean(array_of_values))
     std = float(np.std(array_of_values))
     if key in ['time_train', 'time_test', 'time_hyper']:
-        mean = np.format_float_scientific(mean, 1)
+        mean = np.format_float_scientific(mean, 1, trim="k")
         std = np.format_float_scientific(std, 1)
-    elif key in ['error_train', 'error_test', 'total_sparsity', 'avg_degree', 'number_of_polynomials_and_terms', 'G + O']:
-        mean = "{:.2f}".format(mean)
-        std = "{:.2f}".format(std)
+        mean = latex_float(mean)
+        std = latex_float(std)
+    elif key in ['error_train', 'error_test', 'total_sparsity', 'avg_degree', 'number_of_polynomials_and_terms',
+                 'G + O']:
+        mean = r"${:.2f}$".format(mean)
+        std = r"${:.2f}$".format(std)
     return mean, std
 
 
