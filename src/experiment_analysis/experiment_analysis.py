@@ -49,8 +49,11 @@ def get_from_key(algorithm_name, data_set_name, key: str):
     if key in ['time_train', 'time_test', 'time_hyper']:
         mean = np.format_float_scientific(mean, 1, trim="k")
         std = np.format_float_scientific(std, 1)
+        print("---------------------------------------------")
+        print("MEAN BEFORE: ", mean)
         mean = latex_float(mean)
         std = latex_float(std)
+        print("MEAN AFTER: ", mean)
     elif key in ['error_train', 'error_test', 'total_sparsity', 'avg_degree', 'number_of_polynomials_and_terms',
                  'G + O']:
         mean = r"${:.2f}$".format(mean)
