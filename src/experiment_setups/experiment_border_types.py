@@ -11,7 +11,7 @@ def comparison_border_types(title: str, hyperparameters: list, data_set_names, o
     cp.random.seed(n_seed_)
     np.random.seed(n_seed_)
 
-    psis = np.logspace(-1, -4, 6).tolist()
+    psis = np.logspace(-1, -3, 6).tolist()
     psis.reverse()
 
     # collect the names of all algorithms
