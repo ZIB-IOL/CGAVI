@@ -28,20 +28,6 @@ psis_single_ = [0.005]
 
 
 
-# # # quickruns
-# #
-# border_type_ = "bb"
-# cvs_ = 2
-# n_runs_ = 3
-# n_splits_ = 3
-# psis_ = [0.1]
-# Cs_ = [1.0]
-# psis_single_ = [0.1]
-# Cs_single_ = [1.0]
-# degrees_ = [1]
-# data_sets_performance_ = ['bank']
-
-
 
 
 

@@ -93,7 +93,6 @@ class AcceleratedGradientDescent:
 
             # If polynomial is psi-approximate vanishing, terminate.
             if loss < self.psi:
-                # print("psi")
                 break
             if epoch > 1 and (loss + self.psi * self.tol > loss_list[-1]):
                 iter_no_change += 1
