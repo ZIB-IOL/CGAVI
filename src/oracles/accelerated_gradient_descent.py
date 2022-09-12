@@ -97,7 +97,6 @@ class AcceleratedGradientDescent:
             if epoch > 1 and (loss + self.psi * self.tol > loss_list[-1]):
                 iter_no_change += 1
                 if iter_no_change == self.n_iter_no_change:
-                    # print("not enough decrease")
                     break
 
             else:
