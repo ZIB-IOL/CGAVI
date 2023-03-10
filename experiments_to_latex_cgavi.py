@@ -1,4 +1,4 @@
-from global_ import tos_, border_type_, data_sets_performance_gb_, data_sets_performance_bb_
+from global_ import tos_, data_sets_performance_gb_, data_sets_performance_bb_
 from src.experiment_analysis.experiment_analysis import table_results
 
 hp_bpcg_wihb_gb = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'term_ordering_strategy': tos_, 'border_type': "gb",

@@ -18,7 +18,7 @@ class TestAVI(unittest.TestCase):
         """Tests whether AVI.evaluate() behaves as intended."""
 
         for border_type in ["gb", "bb"]:
-            for tos in ["deglex", "pearson", "rev pearson"]:
+            for tos in ["deglex", "pearson", "rev_pearson"]:
                 X, y = fetch_data_set(name='bank')
                 X, y = unison_shuffled_copies(X, y)
                 X_train, y_train, X_test, y_test = train_test_split(X, y)
@@ -40,7 +40,7 @@ class TestAVI(unittest.TestCase):
     def test_evaluate_transformation(self):
         """Tests whether AVI.evaluate_transformation() behaves as intended."""
         for border_type in ["gb", "bb"]:
-            for tos in ["deglex", "pearson", "rev pearson"]:
+            for tos in ["deglex", "pearson", "rev_pearson"]:
                 X_train = cp.array(([0.1, 0.2, 0.1],
                                     [0.2, 0.3, 0.4],
                                     [0.5, 0.6, 0.5],

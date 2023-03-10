@@ -7,13 +7,14 @@ PMLR.](https://proceedings.mlr.press/v151/wirth22a.html)
 
 and
 
-[Wirth, E. and Pokutta, S., 2022. Conditional Gradients for the Approximately Vanishing Ideal.
+[Wirth, E. and Pokutta, S., 2022. Conditional Gradients for the Approximate Vanishing Ideal.
 arXiv preprint arXiv:2202.03349.](https://arxiv.org/abs/2202.03349)
 
 
 ## References
 This project is an extension of the previously published release and Git repository
-[cgavi](https://github.com/ZIB-IOL/cgavi/releases/tag/v1.0.0) and [avi_at_scale](https://github.com/ZIB-IOL/avi_at_scale),
+[cgavi](https://github.com/ZIB-IOL/cgavi/releases/tag/v1.0.0) and
+[avi_at_scale](https://github.com/ZIB-IOL/avi_at_scale),
 respectively.
 
 

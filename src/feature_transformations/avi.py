@@ -16,12 +16,12 @@ class AVI:
         max_degree: int, Optional
             Maximum degree of the polynomials we construct. (Default is 10.)
         term_ordering_strategy: str, Optional
-            Sort the column vectors of the data set according to this strategy. (Default is "pearson".)
-            Options are ["deglex", "pearson", "rev pearson"].
+            Sort the column vectors of the data set according to this strategy. (Default is "deglex".)
+            Options are ["deglex", "pearson", "rev_pearson"].
             -   "deglex": standard degree lexicographical ordering.
             -   "pearson": aims to maximize the linear independence of columns in the data, then continues with "deglex"
                 at higher degrees.
-            -   "rev pearson": aims to minimize the linear independence of columns in the data, then continues with
+            -   "rev_pearson": aims to minimize the linear independence of columns in the data, then continues with
                 "deglex": at higher degrees.
             After the data is sorted according to this method, DegLex is used as the term ordering for higher degrees.
         border_type: str
@@ -44,7 +44,7 @@ class AVI:
     """
 
     def __init__(self, psi: float = 0.1, tau: float = 0.0, max_degree: int = 10,
-                 term_ordering_strategy: str = "pearson", border_type: str = "gb"):
+                 term_ordering_strategy: str = "deglex", border_type: str = "gb"):
         self.psi = psi
         self.tau = tau
         self.max_degree = max_degree
@@ -63,7 +63,7 @@ class AVI:
             self.term_ordering = list(range(data.shape[1]))
         elif self.term_ordering_strategy == "pearson":
             self.term_ordering = pearson(data, rev=False)
-        elif self.term_ordering_strategy == "rev pearson":
+        elif self.term_ordering_strategy == "rev_pearson":
             self.term_ordering = pearson(data, rev=True)
 
     def fit(self, X_train: cp.ndarray):

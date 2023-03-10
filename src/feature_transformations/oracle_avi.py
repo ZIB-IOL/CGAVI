@@ -38,12 +38,12 @@ class OracleAVI:
         max_iterations: int, Optional
             The maximum number of iterations we run the oracle for, if applicable. (Default is 10000.)
         term_ordering_strategy: str, Optional
-            Sort the column vectors of the data set according to this strategy. (Default is "pearson".)
-            Options are ["deglex", "pearson", "rev pearson"].
+            Sort the column vectors of the data set according to this strategy. (Default is "deglex".)
+            Options are ["deglex", "pearson", "rev_pearson"].
             -   "deglex": standard degree lexicographical ordering.
             -   "pearson": aims to maximize the linear independence of columns in the data, then continues with "deglex"
                 at higher degrees.
-            -   "rev pearson": aims to minimize the linear independence of columns in the data, then continues with
+            -   "rev_pearson": aims to minimize the linear independence of columns in the data, then continues with
                 "deglex": at higher degrees.
             After the data is sorted according to this method, DegLex is used as the term ordering for higher degrees.
         border_type: str
@@ -84,7 +84,7 @@ class OracleAVI:
                  region_type: str = "L1Ball",
                  oracle_type: str = "CG",
                  max_iterations: int = 10000,
-                 term_ordering_strategy: str = "pearson",
+                 term_ordering_strategy: str = "deglex",
                  border_type: str = "gb",
                  inverse_hessian_boost: str = "false"):
         self.psi = psi
@@ -106,6 +106,7 @@ class OracleAVI:
 
         self.border_type = border_type
 
+        assert inverse_hessian_boost in ["false", "weak", "full"], "Wrong option passed for inverse_hessian_boost."
         self.inverse_hessian_boost = inverse_hessian_boost
         if self.inverse_hessian_boost is "full":
             assert self.oracle_type in ["CG", "AGD"], ("Inverse Hessian boosting is only available for 'CG' or 'AGD'."
@@ -120,7 +121,7 @@ class OracleAVI:
             self.term_ordering = list(range(data.shape[1]))
         elif self.term_ordering_strategy == "pearson":
             self.term_ordering = pearson(data, rev=False)
-        elif self.term_ordering_strategy == "rev pearson":
+        elif self.term_ordering_strategy == "rev_pearson":
             self.term_ordering = pearson(data, rev=True)
 
     def fit(self, X_train: cp.ndarray):
@@ -210,8 +211,7 @@ class OracleAVI:
         """
         if self.oracle_type is not "ABM":
             if self.objective_type == "L2Loss":
-                objective = L2Loss(data, labels, self.lmbda, data_squared=data_squared,
-                                   data_labels=data_labels,
+                objective = L2Loss(data, labels, self.lmbda, data_squared=data_squared, data_labels=data_labels,
                                    labels_squared=labels_squared, data_squared_inverse=data_squared_inverse)
 
             if self.region_type == "L1Ball":

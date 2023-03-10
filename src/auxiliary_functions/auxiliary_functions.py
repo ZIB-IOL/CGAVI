@@ -96,7 +96,7 @@ def translate_names(hyperparameters, ordering: bool = True, inverse_hessian_boos
     if hyperparameters["algorithm"] == "oavi" and ordering:
         if hyperparameters["term_ordering_strategy"] == "pearson":
             algorithm_name = algorithm_name + "-" + "p"
-        elif hyperparameters["term_ordering_strategy"] == "rev pearson":
+        elif hyperparameters["term_ordering_strategy"] == "rev_pearson":
             algorithm_name = algorithm_name + "-" + "pr"
         elif hyperparameters["term_ordering_strategy"] == "deglex":
             pass
