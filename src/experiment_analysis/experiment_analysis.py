@@ -1,9 +1,10 @@
 import math
 
 from src.auxiliary_functions.auxiliary_functions import translate_names
-from src.data_frames.data_frames import load_data_frame
 import pandas as pd
 import numpy as np
+
+from src.data_frames.data_frames import load_data_frame
 
 
 def latex_float(f):

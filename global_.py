@@ -18,7 +18,7 @@ data_sets_performance_gb_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
 data_sets_performance_bb_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
 tos_ = "deglex"
 Cs_ = [0.1, 1.0, 10.0]
-psis_ = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005]
+psis_ = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001]
 degrees_ = [1, 2, 3, 4]
 
 Cs_single_ = [1.0]

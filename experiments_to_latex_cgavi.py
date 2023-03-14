@@ -4,9 +4,9 @@ from src.experiment_analysis.experiment_analysis import table_results
 hp_bpcg_wihb_gb = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'term_ordering_strategy': tos_, 'border_type': "gb",
                    'inverse_hessian_boost': 'weak'}
 hp_cgavi_ihb_gb = {'algorithm': 'oavi', 'oracle_type': 'CG', 'term_ordering_strategy': tos_, 'border_type': "gb",
-                   'inverse_hessian_boost': 'true'}
+                   'inverse_hessian_boost': 'full'}
 hp_agdavi_ihb_gb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'term_ordering_strategy': tos_, 'border_type': "gb",
-                    'inverse_hessian_boost': 'true'}
+                    'inverse_hessian_boost': 'full'}
 hp_abm_gb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'term_ordering_strategy': tos_, 'border_type': "gb",
              'inverse_hessian_boost': 'false'}
 hp_vca = {'algorithm': 'vca'}
@@ -15,9 +15,9 @@ hp_svm = {'algorithm': 'svm'}
 hp_bpcg_wihb_bb = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'term_ordering_strategy': tos_, 'border_type': "bb",
                    'inverse_hessian_boost': 'weak'}
 hp_cgavi_ihb_bb = {'algorithm': 'oavi', 'oracle_type': 'CG', 'term_ordering_strategy': tos_, 'border_type': "bb",
-                   'inverse_hessian_boost': 'true'}
+                   'inverse_hessian_boost': 'full'}
 hp_agdavi_ihb_bb = {'algorithm': 'oavi', 'oracle_type': 'AGD', 'term_ordering_strategy': tos_, 'border_type': "bb",
-                    'inverse_hessian_boost': 'true'}
+                    'inverse_hessian_boost': 'full'}
 hp_abm_bb = {'algorithm': 'oavi', 'oracle_type': 'ABM', 'term_ordering_strategy': tos_, 'border_type': "bb",
              'inverse_hessian_boost': 'false'}
 hps_no_svm = [hp_bpcg_wihb_gb, hp_cgavi_ihb_gb, hp_agdavi_ihb_gb, hp_abm_gb, hp_vca]

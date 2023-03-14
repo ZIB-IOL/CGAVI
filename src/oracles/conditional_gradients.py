@@ -1,8 +1,6 @@
 import cupy as cp
 
 from src.auxiliary_functions.auxiliary_functions import fd
-from src.oracles.feasible_regions import L1Ball
-from src.oracles.objective_functions import L2Loss
 
 
 class ConditionalGradients:
