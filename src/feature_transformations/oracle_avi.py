@@ -18,14 +18,14 @@ class OracleAVI:
         psi: float, Optional
             Determines how stronlgy vanishing the polynomials are going to be. (Default is 0.1.)
         eps: float, Optional
-            Determines the accuracy of the oracle. (Default is 0.001.)
+            Determines the accuracy of the oracle. (Default is 0.01.)
         tau: float, Optional
             Determines the radius of CCOP. (Default is 1000.)
         lmbda: float, Optional
             The L2 regularization parameter. (Default is 0.0.)
         tol: float, Optional
             If no improvement in loss over the last iteration of at least psi * tol is made, terminates the algorithm.
-            (Default is 0.000001.)
+            (Default is 0.0001.)
         max_degree: int, Optional
             Maximum degree of the polynomials we construct. (Default is 10.)
         objective_type: str, Optional
@@ -75,10 +75,10 @@ class OracleAVI:
 
     def __init__(self,
                  psi: float = 0.1,
-                 eps: float = 0.001,
+                 eps: float = 0.01,
                  tau: float = 1000,
                  lmbda: float = 0.0,
-                 tol: float = 0.000001,
+                 tol: float = 0.0001,
                  max_degree: int = 10,
                  objective_type: str = "L2Loss",
                  region_type: str = "L1Ball",

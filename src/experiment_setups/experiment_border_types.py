@@ -1,13 +1,13 @@
 import cupy as cp
 import numpy as np
-from global_ import n_splits_, n_runs_, n_seed_
+from global_ import n_runs_, n_seed_
 from src.auxiliary_functions.auxiliary_functions import translate_names, fd
 from src.experiment_setups.experiment_setups import fetch_and_prepare_data, ExperimentSetups
 from src.plotting.plotting_functions import plotter
 
 
 def comparison_border_types(title: str, hyperparameters: list, data_set_names, ordering: bool = False):
-    """Performs the time trials experiments, that is, compares running times of algorithms."""
+    """Compares different types of borders."""
     cp.random.seed(n_seed_)
     np.random.seed(n_seed_)
 

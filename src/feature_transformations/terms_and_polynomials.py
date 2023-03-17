@@ -47,8 +47,6 @@ class SetsOAndG:
     References:
         [1] Heldt, D., Kreuzer, M., Pokutta, S. and Poulisse, H., 2009. Approximate computation of zero-dimensional
         polynomial ideals. Journal of Symbolic Computation, 44(11), pp.1566-1591.
-        [2] Wirth, E. and Pokutta, S., 2022. Conditional Gradients for the Approximately Vanishing Ideal.
-        arXiv preprint arXiv:2202.03349.
     """
 
     def __init__(self, X: cp.ndarray, m: int = None, border_type: str = "gb"):
@@ -163,8 +161,9 @@ class SetsOAndG:
 
     def apply_G_transformation(self, X_test: cp.ndarray):
         """Applies the transformation corresponding to G to X_test."""
-        test_sets_avi = SetsOAndG(X_test, m=self.m)
-        test_sets_avi.border_evaluations_raw.append(fd(X_test))
+        test_sets_avi = SetsOAndG(X_test, m=self.m, border_type=self.border_type)
+        if self.border_type == "bb":
+            test_sets_avi.border_evaluations_raw.append(fd(X_test))
 
         # Degree-1 border
         i = 1
@@ -223,6 +222,7 @@ class SetsOAndG:
                 border_terms_raw, border_evaluations_raw, non_purging_indices = construct_border(
                     fd(self.O_terms[-1]), fd(self.O_evaluations[-1]), fd(self.X), fd(self.border_terms_raw[1]),
                     fd(self.border_evaluations_raw[1]), None)
+
             self.update_border(border_terms_raw, border_evaluations_raw, non_purging_indices)
 
         return self.border_terms_purged[-1], self.border_evaluations_purged[-1]

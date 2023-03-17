@@ -81,7 +81,7 @@ class AcceleratedGradientDescent:
             grad = self.objective.evaluate_gradient(x).flatten()
             if self.alpha > 0:
                 y_old = y
-                y = x - 1 / self.L * grad
+                y = x - 1 / self   .L * grad
                 x = (1 + self.str_cvx_smth_cst) * y - self.str_cvx_smth_cst * y_old
             else:
                 y = x - 1 / self.L * grad

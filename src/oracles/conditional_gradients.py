@@ -97,7 +97,6 @@ class ConditionalGradients:
     def check_termination(self):
         """Checks whether self.optimize() has to terminate or not."""
 
-
         # If Frank-Wolfe gap is smaller than eps, terminate.
         if self.fw_gap < self.eps:
             self.terminate = True
@@ -124,8 +123,8 @@ class ConditionalGradients:
             # If it is no longer possible to create a psi-approximate vanishing polynomial, terminate.
             elif self.loss - self.fw_gap > self.psi:
                 self.terminate = True
-            if not self.terminate:
-                self.loss_list.append(self.loss)
+
+            self.loss_list.append(self.loss)
 
     def delete_away_vertex(self):
         """Deletes the away_vertex and updates alphas and active_vertices."""
