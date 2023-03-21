@@ -13,9 +13,9 @@ markers_ = ['^', 's', 'p', 'X', 'o', 'v', 'D', 'P']
 colors_ = ['red', 'blue', 'orange',  'green', 'purple', 'magenta', 'cyan', 'olive']
 
 data_sets_time_trials_ = ['bank', 'htru', 'skin', 'synthetic']
-data_sets_performance_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
-data_sets_performance_gb_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
-data_sets_performance_bb_ = ['bank', 'credit', 'htru', 'seeds', 'skin', 'spam']
+data_sets_performance_ = ['bank', 'credit', 'htru', 'skin', 'spam']
+data_sets_performance_gb_ = ['bank', 'credit', 'htru', 'skin', 'spam']
+data_sets_performance_bb_ = ['bank', 'credit', 'htru', 'skin', 'spam']
 tos_ = "deglex"
 Cs_ = [0.1, 1.0, 10.0]
 psis_ = [0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001]

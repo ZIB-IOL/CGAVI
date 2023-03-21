@@ -1,5 +1,4 @@
 import cupy as cp
-
 from src.auxiliary_functions.auxiliary_functions import fd
 
 
@@ -182,8 +181,8 @@ class ConditionalGradients:
 
             # Update iterate
             self.iterate = (self.iterate + self.step_size * self.fw_dir).flatten()
-        self.loss_list.append(self.objective.evaluate_function(self.iterate))
 
+        self.loss_list.append(self.objective.evaluate_function(self.iterate))
         return self.iterate, self.loss_list, self.fw_gap_list
 
     def optimize_pcg(self):
@@ -240,6 +239,7 @@ class ConditionalGradients:
 
             # Update iterate
             self.iterate = self.iterate + self.step_size * self.pw_dir
+
         self.loss_list.append(self.objective.evaluate_function(self.iterate))
         return self.iterate, self.loss_list, self.fw_gap_list
 
@@ -322,5 +322,6 @@ class ConditionalGradients:
 
             # Update iterate
             self.iterate = self.iterate + self.step_size * self.final_dir
+
         self.loss_list.append(self.objective.evaluate_function(self.iterate))
         return self.iterate, self.loss_list, self.fw_gap_list

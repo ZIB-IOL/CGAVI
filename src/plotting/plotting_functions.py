@@ -64,7 +64,7 @@ def plotter(title: str, mean_data: list, x_data: np.ndarray, legend: list, data_
                 plt.fill_between(samples, mean - std, mean + std, alpha=alpha, color=colors_[int(np.floor(i / 2))])
 
     if legend is not None:
-        plt.legend(legend, fontsize=font_size_legend_, loc="upper left")
+        plt.legend(legend, fontsize=font_size_legend_, loc="upper right")
     plt.xlabel(x_label, fontsize=font_size_)
     plt.ylabel(y_label, fontsize=font_size_)
     plt.tick_params(axis='both', which='major', labelsize=font_size_, width=(linewidth_ / 1.25),
@@ -76,6 +76,8 @@ def plotter(title: str, mean_data: list, x_data: np.ndarray, legend: list, data_
     plt.gca().yaxis.get_offset_text().set_fontsize(font_size_)
 
     plt.xlim([x_data[0], x_data[x_max - 1]])
+    bottom, top = plt.ylim()
+    plt.ylim(0, top)
     plt.tight_layout()
 
     if data_set_name is not None:

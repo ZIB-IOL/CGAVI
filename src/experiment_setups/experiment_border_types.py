@@ -1,17 +1,16 @@
 import cupy as cp
 import numpy as np
 from global_ import n_runs_, n_seed_
-from src.auxiliary_functions.auxiliary_functions import translate_names, fd
+from src.auxiliary_functions.auxiliary_functions import translate_names
 from src.experiment_setups.experiment_setups import fetch_and_prepare_data, ExperimentSetups
 from src.plotting.plotting_functions import plotter
-
 
 def comparison_border_types(title: str, hyperparameters: list, data_set_names, ordering: bool = False):
     """Compares different types of borders."""
     cp.random.seed(n_seed_)
     np.random.seed(n_seed_)
 
-    psis = np.logspace(-1, -3, 6).tolist()
+    psis = np.logspace(-1, -3, 8).tolist()
     psis.reverse()
 
     # collect the names of all algorithms

@@ -1,4 +1,4 @@
-# Conditional Gradients for the Approximately Vanishing Ideal
+# Conditional Gradients for the Approximate Vanishing Ideal
 
 Code for the paper:
 [Wirth, E. S., & Pokutta, S. (2022, May). Conditional gradients for the approximately vanishing ideal.

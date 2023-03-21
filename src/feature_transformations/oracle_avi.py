@@ -249,7 +249,6 @@ class OracleAVI:
                                                   inverse_hessian_boost="false")
                     tmp_coefficient_vector_2, loss_list_2, _ = oracle.optimize()
                     loss_2 = float(loss_list_2[-1])
-
                     if loss_2 <= self.psi:
                         tmp_coefficient_vector = tmp_coefficient_vector_2
                         loss = loss_2

@@ -1,4 +1,3 @@
-
 import cupy as cp
 from src.auxiliary_functions.auxiliary_functions import fd
 

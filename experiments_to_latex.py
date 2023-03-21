@@ -35,6 +35,7 @@ for key in ["time_train", "time_test", "time_hyper", "error_train", "error_test"
     else:
         table_results(data_sets_performance_gb_, hps, key, ordering=False)
 print("############################################################################################")
+print("############################################################################################")
 
 print("")
 print("")
@@ -53,4 +54,5 @@ for key in ["time_train", "time_test", "time_hyper", "error_train", "error_test"
     print("-------------------------------------------------------------------------")
     print("key: ", key)
     table_results(data_sets_performance_bb_, hps_bases, key, ordering=False)
+print("############################################################################################")
 print("############################################################################################")
