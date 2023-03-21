@@ -5,12 +5,13 @@ from src.auxiliary_functions.auxiliary_functions import translate_names
 from src.experiment_setups.experiment_setups import fetch_and_prepare_data, ExperimentSetups
 from src.plotting.plotting_functions import plotter
 
+
 def comparison_border_types(title: str, hyperparameters: list, data_set_names, ordering: bool = False):
     """Compares different types of borders."""
     cp.random.seed(n_seed_)
     np.random.seed(n_seed_)
 
-    psis = np.logspace(-1, -3, 8).tolist()
+    psis = np.logspace(-0, -3.5, 10).tolist()
     psis.reverse()
 
     # collect the names of all algorithms
@@ -80,7 +81,7 @@ def comparison_border_types(title: str, hyperparameters: list, data_set_names, o
         else:
             pass_algorithm_names = algorithm_names
         plotter(str(title + "_G"), mean_polynomials, psis, pass_algorithm_names, data_set_name,
-                std_data=std_polynomials,
+                std_data=None,
                 x_label=r"Vanishing parameter $\psi$", y_label=r"$|\mathcal{G}|$", x_scale="log", two_versions=True)
-        plotter(str(title + "_O"), mean_terms, psis, pass_algorithm_names, data_set_name, std_data=std_terms,
+        plotter(str(title + "_O"), mean_terms, psis, pass_algorithm_names, data_set_name, std_data=None,
                 x_label=r"Vanishing parameter $\psi$", y_label=r"$|\mathcal{O}|$", x_scale="log", two_versions=True)
