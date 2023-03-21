@@ -5,13 +5,12 @@ from src.auxiliary_functions.auxiliary_functions import translate_names
 from src.experiment_setups.experiment_setups import fetch_and_prepare_data, ExperimentSetups
 from src.plotting.plotting_functions import plotter
 
-
 def comparison_border_types(title: str, hyperparameters: list, data_set_names, ordering: bool = False):
     """Compares different types of borders."""
     cp.random.seed(n_seed_)
     np.random.seed(n_seed_)
 
-    psis = np.logspace(-0, -3.5, 10).tolist()
+    psis = np.logspace(-0.5, -3.5, 10).tolist()
     psis.reverse()
 
     # collect the names of all algorithms

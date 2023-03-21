@@ -24,7 +24,6 @@ hp_svm = {'algorithm': 'svm', 'C': Cs_, 'avg_degree': degrees_}
 
 # Performance experiment
 hps_gb = [hp_bpcg_wihb_gb, hp_cgavi_ihb_gb, hp_agd_ihb_gb, hp_abm_gb, hp_vca, hp_svm]
-
 # for hp in hps_gb:
 #     perform_experiments(data_sets_performance_gb_, hp, saving=True)
 
