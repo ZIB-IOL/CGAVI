@@ -24,13 +24,13 @@ hp_svm = {'algorithm': 'svm', 'C': Cs_, 'avg_degree': degrees_}
 
 # Performance experiment
 hps_gb = [hp_bpcg_wihb_gb, hp_cgavi_ihb_gb, hp_agd_ihb_gb, hp_abm_gb, hp_vca, hp_svm]
-# for hp in hps_gb:
-#     perform_experiments(data_sets_performance_gb_, hp, saving=True)
+for hp in hps_gb:
+    perform_experiments(data_sets_performance_gb_, hp, saving=True)
 
 # Border experiment
 hps_bb = [hp_bpcg_wihb_bb, hp_cgavi_ihb_bb, hp_agd_ihb_bb, hp_abm_bb]
-# for hp in hps_bb:
-#     perform_experiments(data_sets_performance_bb_, hp, saving=True)
+for hp in hps_bb:
+    perform_experiments(data_sets_performance_bb_, hp, saving=True)
 
 # Border plots
 hp_bpcg_wihb_gb_plot = {'algorithm': 'oavi', 'oracle_type': 'BPCG', 'psi': psis_, 'C': Cs_single_,

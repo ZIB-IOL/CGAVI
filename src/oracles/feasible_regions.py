@@ -135,13 +135,29 @@ class L1Ball:
         return None
 
     def projection(self, x: cp.ndarray):
-        """Projects x into the l1 ball."""
-        norm = cp.linalg.norm(x, ord=1)
-        if norm > self.radius:
-            return x / norm * self.radius
-        else:
+        """Projects x into the l1 ball.
+
+        References:
+            [1] "Efficient Projections onto the ℓ1-Ball for Learning in High Dimensions",
+            https://stanford.edu/~jduchi/projects/DuchiShSiCh08.pdf
+        """
+
+        if cp.linalg.norm(x, ord=1) <= self.radius:
             return x
 
+        v = cp.abs(x)
+        mu = cp.sort(v)[::-1]
+
+        p, theta = 0, 0
+        for i in range(0, mu.shape[0]):
+            if mu[i] - (1 / (i + 1)) * (cp.sum(mu[:i + 1]) - self.radius) > 0:
+                p = i + 1
+                theta = (1 / p) * (cp.sum(mu[:p]) - self.radius)
+
+        w = cp.fmax(v - theta, 0)
+        w = cp.sign(x) * w
+
+        return w
 
 class L2Ball:
     """The l2 ball.
