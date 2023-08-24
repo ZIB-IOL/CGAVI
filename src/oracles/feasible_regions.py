@@ -141,7 +141,7 @@ class L1Ball:
             [1] "Efficient Projections onto the ℓ1-Ball for Learning in High Dimensions",
             https://stanford.edu/~jduchi/projects/DuchiShSiCh08.pdf
         """
-
+        x = x.flatten()
         if cp.linalg.norm(x, ord=1) <= self.radius:
             return x
 

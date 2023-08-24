@@ -99,20 +99,16 @@ class ConditionalGradients:
         # If Frank-Wolfe gap is smaller than eps, terminate.
         if self.fw_gap < self.eps:
             self.terminate = True
-            print("gap")
 
         # If no improvement is made, terminate.
         elif self.step_size <= 0:
             self.terminate = True
-            print("step")
 
         elif (self.fw_vertex == 0).all():
             self.terminate = True
-            print("zero")
 
         elif (self.grad == 0).all():
             self.terminate = True
-            print("tzero grad")
 
         elif self.compute_loss:
             self.loss = self.objective.evaluate_function(self.iterate)

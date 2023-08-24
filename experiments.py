@@ -1,4 +1,4 @@
-from global_ import psis_, Cs_, tos_, degrees_, Cs_single_, data_sets_performance_gb_, data_sets_performance_bb_
+sfrom global_ import psis_, Cs_, tos_, degrees_, Cs_single_, data_sets_performance_gb_, data_sets_performance_bb_
 from src.experiment_setups.experiment_border_types import comparison_border_types
 from src.experiment_setups.experiment_setups import perform_experiments
 
